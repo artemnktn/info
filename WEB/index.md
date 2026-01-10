@@ -2,10 +2,10 @@
 title: Home
 ---
 
-# Welcome to Artem Nikitin's Website YOYOYO
+# Welcome to Artem Nikitin's Website 
 
-This is my personal knowledge base and portfolio.
-![[photo_2026-01-04_17-29-41.jpg]]
+городские технологии и критическая теория от артема, самого лучшего милого и любимого на свете :*:*:*
+
 ## Explore
 
 - [[Artem Nikitin]]
