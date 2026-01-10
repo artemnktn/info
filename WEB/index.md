@@ -2,7 +2,7 @@
 title: Home
 ---
 
-# Welcome to Artem Nikitin's Website
+# Welcome to Artem Nikitin's Website YOYOYO
 
 This is my personal knowledge base and portfolio.
 ![[photo_2026-01-04_17-29-41.jpg]]
