@@ -1,8 +1,7 @@
-
 ---
-title: polina 
+title: Artem Nikitin
+draft: false
+tags:
+  - example-tag
 ---
-
-(˘∀˘)/(μ‿μ) 
-
-:***
+ 
