@@ -1,6 +1,6 @@
 ---
-title: выфаы
-draft: false
+title:
+draft: true
 tags:
   - example-tag
 ---
