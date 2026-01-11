@@ -2,7 +2,7 @@
 title: Home
 ---
 
-# Welcome to Artem Nikitin's Website 
+# Website  test
 
 городские технологии и критическая теория от артема, самого лучшего милого и любимого на свете :*:*:*
 
