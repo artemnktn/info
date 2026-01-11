@@ -14,6 +14,8 @@ Artem Nikitin is Currently pursuing a PhD at the School of Design, The Hong Kong
 
 This is my digital garden where I collect and publish ongoing and past projects, writings, notes, and code snippets.
 
+
+I am currently pursuing a PhD at the School of Design, The Hong Kong Polytechnic University, where my work focuses on volumetric urban morphology and the political economy of housing, mapping how urban development distribute benefits and costs across the city.
 ——— 
 
 I hold an MA in Smart Cities and Urban Informatics from the Hebrew University of Jerusalem. Trained as an architect at the St. Petersburg State University of Architecture and Civil Engineering, and completed the postgraduate programme in speculative urbanism at the Strelka Institute for Media, Architecture and Design.
