@@ -1,6 +1,6 @@
 ---
 title: about me
-draft: false
+draft: true
 tags:
   - spatial_data_science
   - critical_theory
