@@ -3,7 +3,6 @@ title: hello,
 draft: false
 tags:
   - spatial_data_science
-  - critical_theory
   - urban_morphology
   - mapping
   - urban_design
@@ -13,7 +12,12 @@ I am an urban researcher and designer with focus in urban informatics, spatial j
 
 Currently, I am based in Hong Kong, where I am pursuing a PhD at the *School of Design, The Hong Kong Polytechnic University.*
 
+---
+This is my digital garden where I collect and publish ongoing and past projects, writings, notes, and code snippets.
 
-
+```
+cd /Users/artemnikitin/quartz
+npx quartz sync
+```
 
 
