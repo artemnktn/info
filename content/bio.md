@@ -3,7 +3,7 @@ title: about me
 draft: true
 tags:
 ---
-
+I am a researcher and designer focused on urban informatics and critical theory. Using data science and design-based research, I examine how policy and planning tools shape urban design, governance, and their economic and political outcomes. I trained as an architect in Saint Petersburg and later received an *MA in Smart Cities and Urban Informatics in Jerusalem*. Prior to this, I gained over seven years of experience working on city planning and web-GIS projects across multiple geographies. 
 
 
 Artem Nikitin is Currently pursuing a PhD at the School of Design, The Hong Kong Polytechnic University, my work uses spatial data science and design methods to examine volumetric urban form, property rights regimes, and their impacts on housing markets and socio-spatial inequality in high-dense cities.

@@ -6,11 +6,12 @@ tags:
   - urban_morphology
   - mapping
   - urban_design
+  - critical_theory
 ---
 
-I am a researcher and designer focused on urban informatics and critical theory. Using data science and design-based research, I examine how policy and planning tools shape urban design, governance, and their economic and political outcomes. I trained as an architect in Saint Petersburg and later received an *MA in Smart Cities and Urban Informatics in Jerusalem*. Prior to this, I gained over seven years of experience working on city planning and web-GIS projects across multiple geographies. 
+I am an architect and urban researcher based in Hong Kong. Using spatial data science and design research informed by critical urban theory, I examine how policy and planning tools shape urban governance, design, and their economic and political outcomes.
 
-Currently, I am based in Hong Kong, where I am pursuing a PhD at the *School of Design, Polytechnic University (HKPU)*
+I am currently pursuing my PhD at the School of Design, PolyU.
 
 ---
 This is my digital garden where I collect and publish ongoing and past projects, writings, notes, and code snippets.
