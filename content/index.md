@@ -9,7 +9,7 @@ tags:
   - critical_theory
 ---
 
-I am an architect and urban researcher based in Hong Kong. Using spatial data science and design research informed by critical urban theory, I examine how policy and planning tools shape urban governance, design, and their economic and political outcomes.
+I am an urban researcher with background in architecture and city planning. Using spatial data science and critical design research, I examine how emerging technologies shape urban design, governance, and their economic and political outcomes.
 
 I am currently pursuing my PhD at the School of Design, PolyU.
 
