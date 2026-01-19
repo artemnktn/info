@@ -1,3 +1,7 @@
+---
+draft: true
+---
+
 # GEMINI Project Context
 
 ## Directory Overview
