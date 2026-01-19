@@ -9,7 +9,7 @@ tags:
   - critical_design
 ---
 I am an urban researcher and designer with background in architecture and city planning. 
-Drawing on spatial data science and critical urban theory, my work examines how emerging technologies such as GIS, remote sensing, and predictive modelling mediate urban design and governance, and how these mediations reconfigure questions of spatial justice. You can find my full [[bio]] here. 
+Drawing on spatial data science and critical urban theory, my work examines how emerging technologies such as GIS, remote sensing, and predictive modelling mediate urban design and governance. You can find my full [[bio]] here. 
 
 Currently  I am based in Hong Kong, where I am pursuing my PhD at the School of Design, The Hong Kong Polytechnic University.
 
