@@ -1,7 +1,7 @@
 ---
 title: hello,
 draft: false
-date: false
+date: true
 tags:
   - spatial-data-science
   - urban_morphology
