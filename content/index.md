@@ -12,7 +12,6 @@ I am an urban researcher and designer with background in architecture and city p
 
 Currently based in Hong Kong, where I am pursuing my PhD at the School of Design, The Hong Kong Polytechnic University.
 
-![[Pasted image 20260119142225.png]]
 
 ---
 This is my digital garden where I collect and publish ongoing and past projects, writings, notes, and code snippets.
