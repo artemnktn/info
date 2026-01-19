@@ -3,6 +3,7 @@ title:
 authors:
 tags:
   - literature-note
+draft: true
 ---
 
 # {{title}}

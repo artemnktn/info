@@ -1,9 +1,3 @@
----
-title: about me
-draft: true
-tags:
----
-
 # GEMINI Project Context
 
 ## Directory Overview

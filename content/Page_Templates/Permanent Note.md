@@ -2,7 +2,9 @@
 title:
 tags:
   - permanent-note
+draft: true
 ---
+
 .
 # {{title}}
 
