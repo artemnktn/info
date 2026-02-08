@@ -105,3 +105,11 @@ tbody {
   margin-top: 0 !important;
 }
 
+/* значения в properties — серые (переопределяем наследование) */
+.popover-hint .content-properties,
+.popover-hint .content-properties *,
+.content-properties,
+.content-properties * {
+  color: var(--secondary) !important;
+}
+
