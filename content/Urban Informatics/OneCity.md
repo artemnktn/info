@@ -17,10 +17,10 @@ OneCity is a webGIS that allows developers and businesses to identify, evaluate 
 In the NOVAYAlabs team, I'm working as a project manager, conceptualising a digital tool that promotes transparent and data-driven urban transformation.
 
 ```
-<iframe 
-  src="https://onecity.dev/" 
-  width="100%" 
-  height="600px"
+<iframe
+  src="https://example.com"
+  width="100%"
+  height="600"
   style="border:none;">
 </iframe>
 
