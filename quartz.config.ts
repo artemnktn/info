@@ -20,11 +20,11 @@ const config: QuartzConfig = {
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "modified",
     theme: {
-      fontOrigin: "googleFonts",
+      fontOrigin: "local",
       cdnCaching: true,
       typography: {
-        header: "Inter",
-        body: "Inter",
+        header: "Acumin Pro",
+        body: "Acumin Pro",
         code: "IBM Plex Mono",
       },
       colors: {
@@ -88,8 +88,8 @@ const config: QuartzConfig = {
       Plugin.Static(),
       Plugin.Favicon(),
       Plugin.NotFoundPage(),
-      // Comment out CustomOgImages to speed up build time
-      Plugin.CustomOgImages(),
+      // Comment out CustomOgImages to speed up build time (requires fonts; disable when using local Acumin Pro)
+      // Plugin.CustomOgImages(),
     ],
   },
 }

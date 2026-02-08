@@ -1,1 +1,107 @@
 @use "./base.scss";
+
+/* Acumin Pro (Adobe font) – place .woff2 files in quartz/static/fonts/ */
+$font-base: "/info";
+
+@font-face {
+  font-family: "Acumin Pro";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("#{$font-base}/static/fonts/AcuminPro-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Acumin Pro";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("#{$font-base}/static/fonts/AcuminPro-Semibold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Acumin Pro";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("#{$font-base}/static/fonts/AcuminPro-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Acumin Pro";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("#{$font-base}/static/fonts/AcuminPro-Italic.woff2") format("woff2");
+}
+
+/* цвет ссылок чуть светлее */
+a {
+  color: color-mix(in srgb, var(--secondary) 75%, var(--darkgray)) !important;
+}
+a:hover {
+  color: color-mix(in srgb, var(--tertiary) 85%, var(--darkgray)) !important;
+}
+
+/* теги: тонкая обводка (как линии), серые по умолчанию, фиолетовые при наведении — как ссылки */
+
+a.internal.tag-link,
+.tags a.internal.tag-link {
+  background: transparent !important;
+  color: var(--secondary) !important;
+  border: 1px solid var(--secondary);
+  border-radius: 5px;
+  padding: 4px 10px;
+  font-weight: 500;
+  text-decoration: none !important;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+a.internal.tag-link:hover,
+.tags a.internal.tag-link:hover {
+  background: transparent !important;
+  color: var(--tertiary) !important;
+  border-color: var(--tertiary);
+}
+
+/* горизонтальные разделительные линии — серые (--secondary, т.к. --lightgray у тебя фиолетовый) */
+hr {
+  background-color: var(--secondary) !important;
+}
+
+.footnotes {
+  border-top-color: var(--secondary) !important;
+}
+
+th {
+  border-bottom-color: var(--secondary) !important;
+}
+
+tr {
+  border-bottom-color: var(--secondary) !important;
+}
+
+/* уменьшаем межстрочное расстояние для более компактного текста */
+p,
+li,
+tbody {
+  line-height: 1.4rem !important;
+}
+
+/* убираем кнопку-переключатель Explorer, структура папок всегда видна */
+.explorer .title-button,
+.explorer .desktop-explorer {
+  display: none !important;
+}
+
+.explorer {
+  &.collapsed {
+    flex: 0 1 auto !important;
+  }
+}
+
+.explorer-content {
+  display: block !important;
+  margin-top: 0 !important;
+}
+
