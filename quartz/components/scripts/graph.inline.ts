@@ -73,6 +73,13 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const visited = getVisited()
   removeAllChildren(graph)
 
+  let cfg = JSON.parse(graph.dataset["cfg"]!) as D3Config
+  // На главной странице показываем полный граф (как Global Graph)
+  const isIndex = slug === "index" || slug === ""
+  const isLocalContainer = graph.classList.contains("graph-container")
+  if (isIndex && isLocalContainer) {
+    cfg = { ...cfg, depth: -1, scale: 0.9, centerForce: 0.2, focusOnHover: true, enableRadial: true }
+  }
   let {
     drag: enableDrag,
     zoom: enableZoom,
@@ -87,7 +94,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     showTags,
     focusOnHover,
     enableRadial,
-  } = JSON.parse(graph.dataset["cfg"]!) as D3Config
+  } = cfg
 
   const data: Map<SimpleSlug, ContentDetails> = new Map(
     Object.entries<ContentDetails>(await fetchData).map(([k, v]) => [

@@ -16,8 +16,6 @@ OneCity is a web-based GIS platform for analysing land plots in relation to offi
 
 At NOVAYA Labs, I work as a Project Manager on the design and coordination of this platform. My work includes early concept development, prototyping and wireframing, user research, and the preparation of product narratives and use-case scenarios.
 
-
-
 ![[03.jpg]]
 
 
