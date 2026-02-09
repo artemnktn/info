@@ -74,8 +74,8 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   removeAllChildren(graph)
 
   let cfg = JSON.parse(graph.dataset["cfg"]!) as D3Config
-  // На главной странице показываем полный граф (как Global Graph)
-  const isIndex = slug === "index" || slug === ""
+  // На главной странице показываем полный граф (как Global Graph). simplifySlug("index") даёт "/"
+  const isIndex = slug === "/" || slug === "index" || slug === ""
   const isLocalContainer = graph.classList.contains("graph-container")
   if (isIndex && isLocalContainer) {
     cfg = { ...cfg, depth: -1, scale: 0.9, centerForce: 0.2, focusOnHover: true, enableRadial: true }
