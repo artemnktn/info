@@ -1,6 +1,37 @@
 @use "../../styles/variables.scss" as *;
 
 .graph {
+  .global-graph-wrapper .graph-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--lightgray);
+  }
+
+  .global-graph-wrapper .graph-filters .graph-filter-pill {
+    font-family: inherit;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--lightgray);
+    background: transparent;
+    color: var(--gray);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .global-graph-wrapper .graph-filters .graph-filter-pill:hover {
+    color: var(--dark);
+    border-color: var(--gray);
+  }
+
+  .global-graph-wrapper .graph-filters .graph-filter-pill.active {
+    background: var(--tertiary);
+    border-color: var(--tertiary);
+    color: #ffffff;
+  }
+
   & > h3 {
     font-size: 1rem;
     margin: 0;
@@ -104,6 +135,14 @@
 
       &:hover {
         color: var(--dark);
+      }
+    }
+
+    :root[saved-theme="dark"] & > .global-graph-wrapper .global-graph-close {
+      color: var(--gray);
+
+      &:hover {
+        color: var(--tertiary);
       }
     }
 

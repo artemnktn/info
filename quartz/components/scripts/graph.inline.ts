@@ -32,6 +32,7 @@ type NodeData = {
   id: SimpleSlug
   text: string
   tags: string[]
+  cssclasses: string[]
 } & SimulationNodeDatum
 
 type SimpleLinkData = {
@@ -54,9 +55,12 @@ type NodeRenderData = GraphicsInfo & {
 }
 
 const localStorageKey = "graph-visited"
+const cssclassFilterKey = "graph-cssclass-filter"
 function getVisited(): Set<SimpleSlug> {
   return new Set(JSON.parse(localStorage.getItem(localStorageKey) ?? "[]"))
 }
+
+let cssclassFilter: string | null = localStorage.getItem(cssclassFilterKey)
 
 function addToVisited(slug: SimpleSlug) {
   const visited = getVisited()
@@ -107,6 +111,50 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const tags: SimpleSlug[] = []
   const validLinks = new Set(data.keys())
 
+  const pageMatchesCssclassFilter = (slug: SimpleSlug) =>
+    !cssclassFilter || (data.get(slug)?.cssclasses ?? []).includes(cssclassFilter)
+
+  // Populate cssclass filters UI (global graph modal only)
+  const isGlobalContainer = graph.classList.contains("global-graph-container")
+  const graphEl = graph.closest(".graph")
+  const filtersEl = graphEl?.querySelector(".global-graph-wrapper .graph-filters") as HTMLElement | null
+  if (filtersEl && isGlobalContainer) {
+    const allCssclasses = new Set<string>()
+    for (const d of data.values()) {
+      for (const c of d.cssclasses ?? []) {
+        if (c) allCssclasses.add(c)
+      }
+    }
+    filtersEl.innerHTML = ""
+    const allBtn = document.createElement("button")
+    allBtn.type = "button"
+    allBtn.className = "graph-filter-pill" + (cssclassFilter === null ? " active" : "")
+    allBtn.textContent = "all"
+    allBtn.addEventListener("click", () => {
+      cssclassFilter = null
+      localStorage.setItem(cssclassFilterKey, "")
+      document.dispatchEvent(new CustomEvent("nav", { detail: { url: getFullSlug(window) } }))
+      document.dispatchEvent(new CustomEvent("graph-refresh"))
+    })
+    filtersEl.appendChild(allBtn)
+    if (allCssclasses.size > 0) {
+      const sortedClasses = [...allCssclasses].sort()
+      for (const c of sortedClasses) {
+        const btn = document.createElement("button")
+        btn.type = "button"
+        btn.className = "graph-filter-pill" + (cssclassFilter === c ? " active" : "")
+        btn.textContent = c
+        btn.addEventListener("click", () => {
+          cssclassFilter = cssclassFilter === c ? null : c
+          localStorage.setItem(cssclassFilterKey, cssclassFilter ?? "")
+          document.dispatchEvent(new CustomEvent("nav", { detail: { url: getFullSlug(window) } }))
+          document.dispatchEvent(new CustomEvent("graph-refresh"))
+        })
+        filtersEl.appendChild(btn)
+      }
+    }
+  }
+
   const tweens = new Map<string, TweenNode>()
   for (const [source, details] of data.entries()) {
     const outgoing = details.links ?? []
@@ -131,13 +179,20 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   }
 
   const neighbourhood = new Set<SimpleSlug>()
-  const wl: (SimpleSlug | "__SENTINEL")[] = [slug, "__SENTINEL"]
-  if (depth >= 0) {
-    while (depth >= 0 && wl.length > 0) {
-      // compute neighbours
+  const seeds: SimpleSlug[] = cssclassFilter
+    ? [...validLinks].filter(
+        (id) => (data.get(id)?.cssclasses ?? []).includes(cssclassFilter),
+      )
+    : [slug]
+
+  const wl: (SimpleSlug | "__SENTINEL")[] = [...seeds, "__SENTINEL"]
+  if (cssclassFilter && seeds.length > 0) {
+    const expandDepth = depth >= 0 ? depth : 1
+    let d = expandDepth
+    while (d >= 0 && wl.length > 0) {
       const cur = wl.shift()!
       if (cur === "__SENTINEL") {
-        depth--
+        d--
         wl.push("__SENTINEL")
       } else {
         neighbourhood.add(cur)
@@ -146,9 +201,26 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
         wl.push(...outgoing.map((l) => l.target), ...incoming.map((l) => l.source))
       }
     }
-  } else {
-    validLinks.forEach((id) => neighbourhood.add(id))
-    if (showTags) tags.forEach((tag) => neighbourhood.add(tag))
+  } else if (!cssclassFilter) {
+    if (depth >= 0) {
+      const wl2: (SimpleSlug | "__SENTINEL")[] = [slug, "__SENTINEL"]
+      let d = depth
+      while (d >= 0 && wl2.length > 0) {
+        const cur = wl2.shift()!
+        if (cur === "__SENTINEL") {
+          d--
+          wl2.push("__SENTINEL")
+        } else {
+          neighbourhood.add(cur)
+          const outgoing = links.filter((l) => l.source === cur)
+          const incoming = links.filter((l) => l.target === cur)
+          wl2.push(...outgoing.map((l) => l.target), ...incoming.map((l) => l.source))
+        }
+      }
+    } else {
+      validLinks.forEach((id) => neighbourhood.add(id))
+      if (showTags) tags.forEach((tag) => neighbourhood.add(tag))
+    }
   }
 
   const nodes = [...neighbourhood].map((url) => {
@@ -157,16 +229,24 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       id: url,
       text,
       tags: data.get(url)?.tags ?? [],
+      cssclasses: data.get(url)?.cssclasses ?? [],
     }
   })
+
+  const graphLinks = links
+    .filter(
+      (l) =>
+        neighbourhood.has(l.source) &&
+        neighbourhood.has(l.target),
+    )
+    .map((l) => ({
+      source: nodes.find((n) => n.id === l.source)!,
+      target: nodes.find((n) => n.id === l.target)!,
+    }))
+
   const graphData: { nodes: NodeData[]; links: LinkData[] } = {
     nodes,
-    links: links
-      .filter((l) => neighbourhood.has(l.source) && neighbourhood.has(l.target))
-      .map((l) => ({
-        source: nodes.find((n) => n.id === l.source)!,
-        target: nodes.find((n) => n.id === l.target)!,
-      })),
+    links: graphLinks,
   }
 
   const width = graph.offsetWidth
@@ -280,14 +360,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     const effectiveId = getEffectiveHighlight()
 
     for (const l of linkRenderData) {
-      let alpha = 1
-
-      // if we are hovering over a node, we want to highlight the immediate neighbours
-      // with full alpha and the rest with default alpha
-      if (effectiveId) {
-        alpha = l.active ? 1 : 0.2
-      }
-
+      const alpha = effectiveId ? (l.active ? 1 : 0.2) : 1
       l.color = l.active ? computedStyleMap["--gray"] : computedStyleMap["--lightgray"]
       tweenGroup.add(new Tweened<LinkRenderData>(l).to({ alpha }, 200))
     }
@@ -349,13 +422,8 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
     const tweenGroup = new TweenGroup()
     for (const n of nodeRenderData) {
-      let alpha = 1
-
-      // if we are hovering over a node, we want to highlight the immediate neighbours
-      if (effectiveId !== null && focusOnHover) {
-        alpha = n.active ? 1 : 0.2
-      }
-
+      const alpha =
+        effectiveId !== null && focusOnHover ? (n.active ? 1 : 0.2) : 1
       tweenGroup.add(new Tweened<Graphics>(n.gfx, tweenGroup).to({ alpha }, 200))
     }
 
@@ -542,10 +610,10 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
           let scaleOpacity = Math.max((scale - 1) / 3.75, 0)
           const activeNodes = nodeRenderData.filter((n) => n.active).flatMap((n) => n.label)
 
-          for (const label of labelsContainer.children) {
-            if (!activeNodes.includes(label)) {
-              label.alpha = scaleOpacity
-            }
+          const activeLabels = new Set(activeNodes)
+          for (const n of nodeRenderData) {
+            if (activeLabels.has(n.label)) continue
+            n.label.alpha = scaleOpacity
           }
         }),
     )
@@ -619,6 +687,8 @@ document.addEventListener("graph-highlight", (e: CustomEventMap["graph-highlight
   },
 )
 
+let renderGlobalGraphRef: (() => Promise<void>) | null = null
+
 document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
   const slug = e.detail.url
   addToVisited(simplifySlug(slug))
@@ -642,7 +712,7 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
   })
 
   const containers = [...document.getElementsByClassName("global-graph-outer")] as HTMLElement[]
-  async function renderGlobalGraph() {
+  async function renderGlobalGraphImpl() {
     const slug = getFullSlug(window)
     for (const container of containers) {
       container.classList.add("active")
@@ -848,6 +918,7 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
       }
     }
   }
+  renderGlobalGraphRef = renderGlobalGraphImpl
 
   function hideGlobalGraph() {
     cleanupGlobalGraphs()
@@ -866,15 +937,24 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
       const anyGlobalGraphOpen = containers.some((container) =>
         container.classList.contains("active"),
       )
-      anyGlobalGraphOpen ? hideGlobalGraph() : renderGlobalGraph()
+      anyGlobalGraphOpen ? hideGlobalGraph() : renderGlobalGraphImpl()
     }
   }
 
   const containerIcons = document.getElementsByClassName("global-graph-icon")
   Array.from(containerIcons).forEach((icon) => {
-    icon.addEventListener("click", renderGlobalGraph)
-    window.addCleanup(() => icon.removeEventListener("click", renderGlobalGraph))
+    icon.addEventListener("click", renderGlobalGraphImpl)
+    window.addCleanup(() => icon.removeEventListener("click", renderGlobalGraphImpl))
   })
+
+  const onGraphRefresh = async () => {
+    if (document.querySelector(".global-graph-outer.active") && renderGlobalGraphRef) {
+      cleanupGlobalGraphs()
+      await renderGlobalGraphRef()
+    }
+  }
+  document.addEventListener("graph-refresh", onGraphRefresh)
+  window.addCleanup(() => document.removeEventListener("graph-refresh", onGraphRefresh))
 
   document.addEventListener("keydown", shortcutHandler)
   window.addCleanup(() => {

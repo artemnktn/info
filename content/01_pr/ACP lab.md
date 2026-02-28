@@ -12,6 +12,8 @@ My role: Product Lead
 Team: NOVAYAlabs
 link:
   - https://novaya.co.uk/urbandesigncodes
+cssclasses:
+  - note
 ---
 ## Urban Design Codes
 

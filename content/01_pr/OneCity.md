@@ -11,6 +11,9 @@ My role: Project Lead, Urban Strategist
 Team: NOVAYAlabs, SARChi (University of the Witwatersrand)
 link:
   - https://onecity.dev/
+cssclasses:
+  - note
+  - project
 ---
 ## OneCity 
 
