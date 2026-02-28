@@ -1,12 +1,11 @@
 import { PageLayout, SharedLayout } from "./quartz/cfg"
 import * as Component from "./quartz/components"
-import CustomCursor from "./quartz/components/CustomCursor"
 
 // components shared across all pages
 export const sharedPageComponents: SharedLayout = {
   head: Component.Head(),
   header: [],
-  afterBody: [CustomCursor()],
+  afterBody: [],
   footer: Component.Footer({
     links: { },
   }),
@@ -37,7 +36,7 @@ export const defaultContentPageLayout: PageLayout = {
         { Component: Component.ReaderMode() },
       ],
     }),
-    Component.Explorer(),
+    Component.DesktopOnly(Component.Contact()),
   ],
   right: [
     Component.Graph(),
@@ -61,7 +60,7 @@ beforeBody: [Component.Breadcrumbs(), Component.ArticleTitle() /*, Component.Con
         { Component: Component.Darkmode() },
       ],
     }),
-    Component.Explorer(),
+    Component.DesktopOnly(Component.Contact()),
   ],
   right: [],
 }

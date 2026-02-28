@@ -1,28 +1,11 @@
 #custom-cursor {
-  position: fixed;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #8c00ff;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  z-index: 99999;
-  left: 0;
-  top: 0;
-  transition: transform 0.08s ease-out;
+  display: none;
 }
 
-body.custom-cursor-active {
-  cursor: none;
-}
+/* Обычный курсор (стрелка) с фиолетовой обводкой */
+$cursor-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%238c00ff' stroke-width='2' d='M5 3l14 9h-7l-3 9z'/%3E%3C/svg%3E");
 
-body.custom-cursor-active a,
-body.custom-cursor-active button {
-  cursor: none;
-}
-
-/* граф при перетаскивании — не показывать руку, кружок продолжает следовать */
-body.custom-cursor-active .graph,
-body.custom-cursor-active .graph * {
-  cursor: none !important;
+body.custom-cursor-active,
+body.custom-cursor-active * {
+  cursor: $cursor-svg 0 0, auto !important;
 }

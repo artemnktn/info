@@ -1,7 +1,13 @@
 @use "./base.scss";
 
+/* Выделение текста: фиолетовая подсветка и текст #C066FF */
+::selection {
+  background: color-mix(in srgb, var(--tertiary) 60%, rgba(255, 255, 255, 0));
+  color: #c066ff !important;
+}
+
 /* Acumin Pro (Adobe font) – place .woff2 files in quartz/static/fonts/ */
-$font-base: "/info";
+$font-base: "";
 
 @font-face {
   font-family: "Acumin Pro";

@@ -16,7 +16,7 @@ const config: QuartzConfig = {
       provider: "plausible",
     },
     locale: "en-US",
-    baseUrl: "artemnktn.github.io/info",
+    baseUrl: "artemnikitin.info",
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "modified",
     theme: {
@@ -76,6 +76,7 @@ const config: QuartzConfig = {
     filters: [Plugin.RemoveDrafts()],
     emitters: [
       Plugin.AliasRedirects(),
+      Plugin.CNAME(),
       Plugin.ComponentResources(),
       Plugin.ContentPage(),
       Plugin.FolderPage(),

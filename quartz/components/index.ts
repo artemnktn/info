@@ -24,6 +24,7 @@ import Breadcrumbs from "./Breadcrumbs"
 import Comments from "./Comments"
 import Flex from "./Flex"
 import ConditionalRender from "./ConditionalRender"
+import Contact from "./Contact"
 
 
 export {
@@ -53,4 +54,5 @@ export {
   Comments,
   Flex,
   ConditionalRender,
+  Contact,
 }

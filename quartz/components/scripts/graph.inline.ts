@@ -16,8 +16,8 @@ import {
 } from "d3"
 import { Text, Graphics, Application, Container, Circle } from "pixi.js"
 import { Group as TweenGroup, Tween as Tweened } from "@tweenjs/tween.js"
-import { registerEscapeHandler, removeAllChildren } from "./util"
-import { FullSlug, SimpleSlug, getFullSlug, resolveRelative, simplifySlug } from "../../util/path"
+import { fetchCanonical, registerEscapeHandler, removeAllChildren } from "./util"
+import { FullSlug, SimpleSlug, getFullSlug, normalizeRelativeURLs, resolveRelative, simplifySlug } from "../../util/path"
 import { D3Config } from "../Graph"
 
 type GraphicsInfo = {
@@ -61,6 +61,192 @@ function addToVisited(slug: SimpleSlug) {
   const visited = getVisited()
   visited.add(slug)
   localStorage.setItem(localStorageKey, JSON.stringify([...visited]))
+}
+
+const htmlParser = new DOMParser()
+
+async function showContentModal(targetUrl: URL) {
+  const existingCount = document.querySelectorAll(".graph-content-preview").length
+  const cascadeOffset = existingCount * 24
+
+  const overlay = document.createElement("div")
+  overlay.className = "graph-content-preview"
+  const inner = document.createElement("div")
+  inner.className = "graph-content-inner"
+
+  const dragHandle = document.createElement("div")
+  dragHandle.className = "graph-content-drag-handle"
+
+  const openLink = document.createElement("a")
+  openLink.href = targetUrl.toString()
+  openLink.className = "internal graph-content-open-link"
+  openLink.setAttribute("aria-label", "Open page")
+  openLink.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`
+  openLink.onclick = () => close()
+
+  const closeBtn = document.createElement("button")
+  closeBtn.className = "graph-content-close"
+  closeBtn.setAttribute("aria-label", "Close")
+  closeBtn.innerHTML = "×"
+  closeBtn.type = "button"
+
+  dragHandle.appendChild(openLink)
+  dragHandle.appendChild(closeBtn)
+
+  let posX = 0,
+    posY = 0
+  let dragStartX = 0,
+    dragStartY = 0,
+    innerStartX = 0,
+    innerStartY = 0
+
+  function initPosition() {
+    const rect = inner.getBoundingClientRect()
+    posX = rect.left + rect.width / 2 - window.innerWidth / 2
+    posY = rect.top + rect.height / 2 - window.innerHeight / 2
+  }
+
+  dragHandle.onmousedown = (e: MouseEvent) => {
+    if ((e.target as HTMLElement).closest("button, a")) return
+    e.preventDefault()
+    initPosition()
+    dragStartX = e.clientX
+    dragStartY = e.clientY
+    innerStartX = posX
+    innerStartY = posY
+
+    function onMouseMove(e: MouseEvent) {
+      posX = innerStartX + e.clientX - dragStartX
+      posY = innerStartY + e.clientY - dragStartY
+      inner.style.left = `calc(50% + ${posX}px)`
+      inner.style.top = `calc(50% + ${posY}px)`
+    }
+    function onMouseUp() {
+      document.removeEventListener("mousemove", onMouseMove)
+      document.removeEventListener("mouseup", onMouseUp)
+      document.body.style.userSelect = ""
+    }
+    document.body.style.userSelect = "none"
+    document.addEventListener("mousemove", onMouseMove)
+    document.addEventListener("mouseup", onMouseUp)
+  }
+
+  function close() {
+    overlay.classList.remove("active")
+    overlay.addEventListener("transitionend", () => overlay.remove(), { once: true })
+    document.removeEventListener("keydown", onEsc)
+  }
+
+  closeBtn.onclick = () => close()
+
+  const onEsc = (e: KeyboardEvent) => {
+    if (e.key === "Escape") {
+      e.preventDefault()
+      close()
+    }
+  }
+  document.addEventListener("keydown", onEsc)
+
+  const contentWrap = document.createElement("div")
+  contentWrap.className = "graph-content-body"
+
+  try {
+    const res = await fetchCanonical(targetUrl)
+    const contentType = res.headers.get("Content-Type") ?? ""
+    if (!contentType.startsWith("text/html")) {
+      contentWrap.innerHTML = `<p>Cannot preview this content.</p>`
+    } else {
+      const html = htmlParser.parseFromString(await res.text(), "text/html")
+      normalizeRelativeURLs(html, targetUrl)
+      const elts = [...html.getElementsByClassName("popover-hint")]
+      if (elts.length > 0) {
+        elts.forEach((elt) => contentWrap.appendChild(elt.cloneNode(true)))
+      } else {
+        contentWrap.innerHTML = `<p>Preview not available.</p>`
+      }
+    }
+  } catch {
+    contentWrap.innerHTML = `<p>Failed to load content.</p>`
+  }
+
+  const MIN_W = 280
+  const MIN_H = 200
+  function setupResize(
+    el: HTMLElement,
+    corner: "se" | "sw" | "ne" | "nw",
+    setPos?: (x: number, y: number) => void,
+  ) {
+    const handle = document.createElement("div")
+    handle.className = `graph-window-resize-handle graph-window-resize-${corner}`
+    handle.setAttribute("aria-label", "Resize")
+
+    handle.onmousedown = (e: MouseEvent) => {
+      e.preventDefault()
+      const rect = el.getBoundingClientRect()
+      const startW = rect.width
+      const startH = rect.height
+      const startX = e.clientX
+      const startY = e.clientY
+      const startPosX = rect.left + rect.width / 2 - window.innerWidth / 2
+      const startPosY = rect.top + rect.height / 2 - window.innerHeight / 2
+
+      function onMouseMove(ev: MouseEvent) {
+        let w: number
+        let h: number
+        let dX = 0
+        let dY = 0
+        if (corner === "se") {
+          w = Math.max(MIN_W, startW + ev.clientX - startX)
+          h = Math.max(MIN_H, startH + ev.clientY - startY)
+        } else if (corner === "sw") {
+          w = Math.max(MIN_W, startW + startX - ev.clientX)
+          h = Math.max(MIN_H, startH + ev.clientY - startY)
+          dX = -(w - startW) / 2
+        } else if (corner === "ne") {
+          w = Math.max(MIN_W, startW + ev.clientX - startX)
+          h = Math.max(MIN_H, startH + startY - ev.clientY)
+          dY = -(h - startH) / 2
+        } else {
+          w = Math.max(MIN_W, startW + startX - ev.clientX)
+          h = Math.max(MIN_H, startH + startY - ev.clientY)
+          dX = -(w - startW) / 2
+          dY = -(h - startH) / 2
+        }
+        el.style.width = `${w}px`
+        el.style.maxWidth = "none"
+        el.style.height = `${h}px`
+        el.style.maxHeight = "none"
+        if (setPos) setPos(startPosX + dX, startPosY + dY)
+      }
+      function onMouseUp() {
+        document.removeEventListener("mousemove", onMouseMove)
+        document.removeEventListener("mouseup", onMouseUp)
+        document.body.style.userSelect = ""
+      }
+      document.body.style.userSelect = "none"
+      document.addEventListener("mousemove", onMouseMove)
+      document.addEventListener("mouseup", onMouseUp)
+    }
+    return handle
+  }
+
+  const setInnerPos = (x: number, y: number) => {
+    inner.style.left = `calc(50% + ${x}px)`
+    inner.style.top = `calc(50% + ${y}px)`
+  }
+  ;(["se", "sw", "ne", "nw"] as const).forEach((corner) => {
+    inner.appendChild(setupResize(inner, corner, setInnerPos))
+  })
+
+  inner.appendChild(dragHandle)
+  inner.appendChild(contentWrap)
+  overlay.appendChild(inner)
+  document.body.appendChild(overlay)
+  overlay.classList.add("active")
+
+  if (cascadeOffset) {
+    setInnerPos(cascadeOffset, cascadeOffset)
+  }
 }
 
 type TweenNode = {
@@ -205,7 +391,9 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     const isCurrent = d.id === slug
     if (isCurrent) {
       return computedStyleMap["--secondary"]
-    } else if (visited.has(d.id) || d.id.startsWith("tags/")) {
+    } else if (d.id.startsWith("tags/")) {
+      return computedStyleMap["--secondary"]
+    } else if (visited.has(d.id)) {
       return computedStyleMap["--tertiary"]
     } else {
       return computedStyleMap["--gray"]
@@ -406,7 +594,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       cursor: "pointer",
     })
       .circle(0, 0, nodeRadius(n))
-      .fill({ color: isTagNode ? computedStyleMap["--light"] : color(n) })
+      .fill({ color: isTagNode ? computedStyleMap["--secondary"] : color(n) })
       .on("pointerover", (e) => {
         updateHoverInfo(e.target.label)
         oldLabelOpacity = label.alpha
@@ -423,7 +611,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       })
 
     if (isTagNode) {
-      gfx.stroke({ width: 2, color: computedStyleMap["--tertiary"] })
+      gfx.stroke({ width: 2, color: computedStyleMap["--secondary"] })
     }
 
     nodesContainer.addChild(gfx)
@@ -490,7 +678,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
           if (Date.now() - dragStartTime < 500) {
             const node = graphData.nodes.find((n) => n.id === event.subject.id) as NodeData
             const targ = resolveRelative(fullSlug, node.id)
-            window.spaNavigate(new URL(targ, window.location.toString()))
+            showContentModal(new URL(targ, window.location.toString()))
           }
         }),
     )
@@ -498,7 +686,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     for (const node of nodeRenderData) {
       node.gfx.on("click", () => {
         const targ = resolveRelative(fullSlug, node.simulationData.id)
-        window.spaNavigate(new URL(targ, window.location.toString()))
+        showContentModal(new URL(targ, window.location.toString()))
       })
     }
   }
@@ -548,7 +736,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       l.gfx.moveTo(linkData.source.x! + width / 2, linkData.source.y! + height / 2)
       l.gfx
         .lineTo(linkData.target.x! + width / 2, linkData.target.y! + height / 2)
-        .stroke({ alpha: l.alpha, width: 1, color: l.color })
+        .stroke({ alpha: l.alpha, width: 0.5, color: l.color })
     }
 
     tweens.forEach((t) => t.update(time))
@@ -612,8 +800,126 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
         sidebar.style.zIndex = "1"
       }
 
+      const wrapper = container.querySelector(".global-graph-wrapper") as HTMLElement
       const graphContainer = container.querySelector(".global-graph-container") as HTMLElement
+      const dragHandle = container.querySelector(".global-graph-drag-handle") as HTMLElement
+      const closeBtn = container.querySelector(".global-graph-close") as HTMLButtonElement
+
       registerEscapeHandler(container, hideGlobalGraph)
+      closeBtn?.addEventListener("click", hideGlobalGraph)
+
+      if (wrapper) {
+        const MIN_W = 300
+        const MIN_H = 200
+        const setWrapperPos = (x: number, y: number) => {
+          wrapper.style.left = `calc(50% + ${x}px)`
+          wrapper.style.top = `calc(50% + ${y}px)`
+        }
+        const setupGlobalResize = (corner: "se" | "sw" | "ne" | "nw") => {
+          const handle = container.querySelector(`.graph-window-resize-${corner}`) as HTMLElement
+          if (!handle) return
+          handle.onmousedown = (e: MouseEvent) => {
+            e.preventDefault()
+            const rect = wrapper.getBoundingClientRect()
+            const sw = rect.width
+            const sh = rect.height
+            const sx = e.clientX
+            const sy = e.clientY
+            const startPosX = rect.left + rect.width / 2 - window.innerWidth / 2
+            const startPosY = rect.top + rect.height / 2 - window.innerHeight / 2
+
+            function onMouseMove(ev: MouseEvent) {
+              let w: number
+              let h: number
+              let dX = 0
+              let dY = 0
+              if (corner === "se") {
+                w = Math.max(MIN_W, sw + ev.clientX - sx)
+                h = Math.max(MIN_H, sh + ev.clientY - sy)
+              } else if (corner === "sw") {
+                w = Math.max(MIN_W, sw + sx - ev.clientX)
+                h = Math.max(MIN_H, sh + ev.clientY - sy)
+                dX = -(w - sw) / 2
+              } else if (corner === "ne") {
+                w = Math.max(MIN_W, sw + ev.clientX - sx)
+                h = Math.max(MIN_H, sh + sy - ev.clientY)
+                dY = -(h - sh) / 2
+              } else {
+                w = Math.max(MIN_W, sw + sx - ev.clientX)
+                h = Math.max(MIN_H, sh + sy - ev.clientY)
+                dX = -(w - sw) / 2
+                dY = -(h - sh) / 2
+              }
+              wrapper.style.width = `${w}px`
+              wrapper.style.height = `${h}px`
+              setWrapperPos(startPosX + dX, startPosY + dY)
+            }
+            function onMouseUp() {
+              document.removeEventListener("mousemove", onMouseMove)
+              document.removeEventListener("mouseup", onMouseUp)
+              document.body.style.userSelect = ""
+            }
+            document.body.style.userSelect = "none"
+            document.addEventListener("mousemove", onMouseMove)
+            document.addEventListener("mouseup", onMouseUp)
+          }
+          globalGraphCleanups.push(() => {
+            handle.onmousedown = null
+          })
+        }
+        ;(["se", "sw", "ne", "nw"] as const).forEach(setupGlobalResize)
+      }
+
+      if (wrapper && dragHandle) {
+        wrapper.style.left = ""
+        wrapper.style.top = ""
+        wrapper.style.width = ""
+        wrapper.style.height = ""
+
+        let posX = 0,
+          posY = 0
+        let dragStartX = 0,
+          dragStartY = 0,
+          innerStartX = 0,
+          innerStartY = 0
+
+        function initPosition() {
+          const rect = wrapper.getBoundingClientRect()
+          posX = rect.left + rect.width / 2 - window.innerWidth / 2
+          posY = rect.top + rect.height / 2 - window.innerHeight / 2
+        }
+
+        dragHandle.onmousedown = (e: MouseEvent) => {
+          if ((e.target as HTMLElement).closest("button")) return
+          e.preventDefault()
+          initPosition()
+          dragStartX = e.clientX
+          dragStartY = e.clientY
+          innerStartX = posX
+          innerStartY = posY
+
+          function onMouseMove(e: MouseEvent) {
+            posX = innerStartX + e.clientX - dragStartX
+            posY = innerStartY + e.clientY - dragStartY
+            wrapper.style.left = `calc(50% + ${posX}px)`
+            wrapper.style.top = `calc(50% + ${posY}px)`
+          }
+          function onMouseUp() {
+            document.removeEventListener("mousemove", onMouseMove)
+            document.removeEventListener("mouseup", onMouseUp)
+            document.body.style.userSelect = ""
+          }
+          document.body.style.userSelect = "none"
+          document.addEventListener("mousemove", onMouseMove)
+          document.addEventListener("mouseup", onMouseUp)
+        }
+
+        globalGraphCleanups.push(() => {
+          closeBtn?.removeEventListener("click", hideGlobalGraph)
+          dragHandle.onmousedown = null
+        })
+      }
+
       if (graphContainer) {
         globalGraphCleanups.push(await renderGraph(graphContainer, slug))
       }
