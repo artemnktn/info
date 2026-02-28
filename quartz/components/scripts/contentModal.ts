@@ -60,7 +60,9 @@ export async function showContentModal(targetUrl: URL) {
     }
     function onEnd() {
       document.removeEventListener("mousemove", onMouseMove)
-      document.removeEventListener("mouseup", onMouseUp)
+      document.removeEventListener("mouseup", onEnd)
+      document.removeEventListener("pointerup", onPointerUp)
+      document.removeEventListener("pointercancel", onPointerUp)
       document.removeEventListener("touchmove", onTouchMove, { capture: true })
       document.removeEventListener("touchend", onTouchEnd)
       document.body.style.userSelect = ""
@@ -68,6 +70,7 @@ export async function showContentModal(targetUrl: URL) {
     function onMouseMove(e: MouseEvent) {
       onMove(e.clientX, e.clientY)
     }
+    const onPointerUp = () => onEnd()
     function onTouchMove(e: TouchEvent) {
       if (e.touches.length > 0) {
         e.preventDefault()
@@ -80,6 +83,8 @@ export async function showContentModal(targetUrl: URL) {
     document.body.style.userSelect = "none"
     document.addEventListener("mousemove", onMouseMove)
     document.addEventListener("mouseup", onEnd)
+    document.addEventListener("pointerup", onPointerUp)
+    document.addEventListener("pointercancel", onPointerUp)
     document.addEventListener("touchmove", onTouchMove, { passive: false, capture: true })
     document.addEventListener("touchend", onTouchEnd)
   }
@@ -87,13 +92,21 @@ export async function showContentModal(targetUrl: URL) {
   dragHandle.onmousedown = (e: MouseEvent) => {
     if ((e.target as HTMLElement).closest("button, a")) return
     e.preventDefault()
+    const pid = (e as unknown as PointerEvent).pointerId
     startDrag(e.clientX, e.clientY)
+    if (pid !== undefined && dragHandle.setPointerCapture) {
+      dragHandle.setPointerCapture(pid)
+    }
   }
   dragHandle.ontouchstart = (e: TouchEvent) => {
     if ((e.target as HTMLElement).closest("button, a")) return
     if (e.touches.length > 0) {
       e.preventDefault()
-      startDrag(e.touches[0].clientX, e.touches[0].clientY)
+      const t = e.touches[0]
+      startDrag(t.clientX, t.clientY)
+      if (dragHandle.setPointerCapture) {
+        dragHandle.setPointerCapture(t.identifier)
+      }
     }
   }
 
@@ -183,36 +196,49 @@ export async function showContentModal(targetUrl: URL) {
         el.style.maxHeight = "none"
         if (setPos) setPos(startPosX + dX, startPosY + dY)
       }
-      function onEnd() {
+      const endResize = () => {
         document.removeEventListener("mousemove", onMouseMove)
-        document.removeEventListener("mouseup", onMouseUp)
+        document.removeEventListener("mouseup", endResize)
+        document.removeEventListener("pointerup", onPointerUp)
+        document.removeEventListener("pointercancel", onPointerUp)
         document.removeEventListener("touchmove", onTouchMove, { capture: true })
         document.removeEventListener("touchend", onTouchEnd)
         document.body.style.userSelect = ""
       }
       const onMouseMove = (ev: MouseEvent) => update(ev.clientX, ev.clientY)
+      const onPointerUp = () => endResize()
       const onTouchMove = (ev: TouchEvent) => {
         if (ev.touches.length > 0) {
           ev.preventDefault()
           update(ev.touches[0].clientX, ev.touches[0].clientY)
         }
       }
-      const onTouchEnd = () => onEnd()
+      const onTouchEnd = () => endResize()
       document.body.style.userSelect = "none"
       document.addEventListener("mousemove", onMouseMove)
-      document.addEventListener("mouseup", onMouseUp)
+      document.addEventListener("mouseup", endResize)
+      document.addEventListener("pointerup", onPointerUp)
+      document.addEventListener("pointercancel", onPointerUp)
       document.addEventListener("touchmove", onTouchMove, { passive: false, capture: true })
       document.addEventListener("touchend", onTouchEnd)
     }
 
     handle.onmousedown = (e: MouseEvent) => {
       e.preventDefault()
+      const pid = (e as unknown as PointerEvent).pointerId
       startResize(e.clientX, e.clientY)
+      if (pid !== undefined && handle.setPointerCapture) {
+        handle.setPointerCapture(pid)
+      }
     }
     handle.ontouchstart = (e: TouchEvent) => {
       if (e.touches.length > 0) {
         e.preventDefault()
-        startResize(e.touches[0].clientX, e.touches[0].clientY)
+        const t = e.touches[0]
+        startResize(t.clientX, t.clientY)
+        if (handle.setPointerCapture) {
+          handle.setPointerCapture(t.identifier)
+        }
       }
     }
     return handle

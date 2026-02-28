@@ -668,35 +668,48 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
               wrapper.style.height = `${h}px`
               setWrapperPos(startPosX + dX, startPosY + dY)
             }
-            function onEnd() {
+            const endResize = () => {
               document.removeEventListener("mousemove", onMouseMove)
-              document.removeEventListener("mouseup", onMouseUp)
+              document.removeEventListener("mouseup", endResize)
+              document.removeEventListener("pointerup", onPointerUp)
+              document.removeEventListener("pointercancel", onPointerUp)
               document.removeEventListener("touchmove", onTouchMove, { capture: true })
               document.removeEventListener("touchend", onTouchEnd)
               document.body.style.userSelect = ""
             }
             const onMouseMove = (ev: MouseEvent) => update(ev.clientX, ev.clientY)
+            const onPointerUp = () => endResize()
             const onTouchMove = (ev: TouchEvent) => {
               if (ev.touches.length > 0) {
                 ev.preventDefault()
                 update(ev.touches[0].clientX, ev.touches[0].clientY)
               }
             }
-            const onTouchEnd = () => onEnd()
+            const onTouchEnd = () => endResize()
             document.body.style.userSelect = "none"
             document.addEventListener("mousemove", onMouseMove)
-            document.addEventListener("mouseup", onMouseUp)
+            document.addEventListener("mouseup", endResize)
+            document.addEventListener("pointerup", onPointerUp)
+            document.addEventListener("pointercancel", onPointerUp)
             document.addEventListener("touchmove", onTouchMove, { passive: false, capture: true })
             document.addEventListener("touchend", onTouchEnd)
           }
           handle.onmousedown = (e: MouseEvent) => {
             e.preventDefault()
+            const pid = (e as unknown as PointerEvent).pointerId
             startResize(e.clientX, e.clientY)
+            if (pid !== undefined && handle.setPointerCapture) {
+              handle.setPointerCapture(pid)
+            }
           }
           handle.ontouchstart = (e: TouchEvent) => {
             if (e.touches.length > 0) {
               e.preventDefault()
-              startResize(e.touches[0].clientX, e.touches[0].clientY)
+              const t = e.touches[0]
+              startResize(t.clientX, t.clientY)
+              if (handle.setPointerCapture) {
+                handle.setPointerCapture(t.identifier)
+              }
             }
           }
           globalGraphCleanups.push(() => {
@@ -741,12 +754,15 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
           }
           function onEnd() {
             document.removeEventListener("mousemove", onMouseMove)
-            document.removeEventListener("mouseup", onMouseUp)
+            document.removeEventListener("mouseup", onEnd)
+            document.removeEventListener("pointerup", onPointerUp)
+            document.removeEventListener("pointercancel", onPointerUp)
             document.removeEventListener("touchmove", onTouchMove, { capture: true })
             document.removeEventListener("touchend", onTouchEnd)
             document.body.style.userSelect = ""
           }
           const onMouseMove = (e: MouseEvent) => onMove(e.clientX, e.clientY)
+          const onPointerUp = () => onEnd()
           const onTouchMove = (e: TouchEvent) => {
             if (e.touches.length > 0) {
               e.preventDefault()
@@ -756,7 +772,9 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
           const onTouchEnd = () => onEnd()
           document.body.style.userSelect = "none"
           document.addEventListener("mousemove", onMouseMove)
-          document.addEventListener("mouseup", onMouseUp)
+          document.addEventListener("mouseup", onEnd)
+          document.addEventListener("pointerup", onPointerUp)
+          document.addEventListener("pointercancel", onPointerUp)
           document.addEventListener("touchmove", onTouchMove, { passive: false, capture: true })
           document.addEventListener("touchend", onTouchEnd)
         }
@@ -764,13 +782,21 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
         dragHandle.onmousedown = (e: MouseEvent) => {
           if ((e.target as HTMLElement).closest("button")) return
           e.preventDefault()
+          const pid = (e as unknown as PointerEvent).pointerId
           startGlobalDrag(e.clientX, e.clientY)
+          if (pid !== undefined && dragHandle.setPointerCapture) {
+            dragHandle.setPointerCapture(pid)
+          }
         }
         dragHandle.ontouchstart = (e: TouchEvent) => {
           if ((e.target as HTMLElement).closest("button")) return
           if (e.touches.length > 0) {
             e.preventDefault()
-            startGlobalDrag(e.touches[0].clientX, e.touches[0].clientY)
+            const t = e.touches[0]
+            startGlobalDrag(t.clientX, t.clientY)
+            if (dragHandle.setPointerCapture) {
+              dragHandle.setPointerCapture(t.identifier)
+            }
           }
         }
 
