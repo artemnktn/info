@@ -56,11 +56,13 @@ type NodeRenderData = GraphicsInfo & {
 
 const localStorageKey = "graph-visited"
 const cssclassFilterKey = "graph-cssclass-filter"
+const tagFilterKey = "graph-tag-filter"
 function getVisited(): Set<SimpleSlug> {
   return new Set(JSON.parse(localStorage.getItem(localStorageKey) ?? "[]"))
 }
 
 let cssclassFilter: string | null = localStorage.getItem(cssclassFilterKey)
+let tagFilter: string | null = localStorage.getItem(tagFilterKey)
 
 function addToVisited(slug: SimpleSlug) {
   const visited = getVisited()
@@ -132,7 +134,9 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     allBtn.textContent = "all"
     allBtn.addEventListener("click", () => {
       cssclassFilter = null
+      tagFilter = null
       localStorage.setItem(cssclassFilterKey, "")
+      localStorage.setItem(tagFilterKey, "")
       document.dispatchEvent(new CustomEvent("nav", { detail: { url: getFullSlug(window) } }))
       document.dispatchEvent(new CustomEvent("graph-refresh"))
     })
@@ -179,14 +183,16 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   }
 
   const neighbourhood = new Set<SimpleSlug>()
-  const seeds: SimpleSlug[] = cssclassFilter
-    ? [...validLinks].filter(
-        (id) => (data.get(id)?.cssclasses ?? []).includes(cssclassFilter),
-      )
-    : [slug]
+  const seeds: SimpleSlug[] = tagFilter
+    ? [tagFilter]
+    : cssclassFilter
+      ? [...validLinks].filter(
+          (id) => (data.get(id)?.cssclasses ?? []).includes(cssclassFilter),
+        )
+      : [slug]
 
   const wl: (SimpleSlug | "__SENTINEL")[] = [...seeds, "__SENTINEL"]
-  if (cssclassFilter && seeds.length > 0) {
+  if ((tagFilter || cssclassFilter) && seeds.length > 0) {
     const expandDepth = depth >= 0 ? depth : 1
     let d = expandDepth
     while (d >= 0 && wl.length > 0) {
@@ -201,7 +207,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
         wl.push(...outgoing.map((l) => l.target), ...incoming.map((l) => l.source))
       }
     }
-  } else if (!cssclassFilter) {
+  } else if (!tagFilter && !cssclassFilter) {
     if (depth >= 0) {
       const wl2: (SimpleSlug | "__SENTINEL")[] = [slug, "__SENTINEL"]
       let d = depth
@@ -674,8 +680,16 @@ function cleanupGlobalGraphs() {
   globalGraphCleanups = []
 }
 
-document.addEventListener("graph-highlight", (e: CustomEventMap["graph-highlight"]) => {
+document.addEventListener("graph-highlight", async (e: CustomEventMap["graph-highlight"]) => {
     const slug = e.detail?.slug ?? null
+    if (slug && slug.startsWith("tags/")) {
+      tagFilter = slug
+      localStorage.setItem(tagFilterKey, slug)
+      if (renderGlobalGraphRef) {
+        cleanupGlobalGraphs()
+        await renderGlobalGraphRef()
+      }
+    }
     const containers = document.querySelectorAll(
       ".graph-container, .global-graph-container",
     ) as NodeListOf<HTMLElement>
@@ -701,6 +715,9 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
     }
   }
 
+  const containers = [...document.getElementsByClassName("global-graph-outer")] as HTMLElement[]
+  renderGlobalGraphRef = () => renderGlobalGraphImpl()
+
   await renderLocalGraph()
   const handleThemeChange = () => {
     void renderLocalGraph()
@@ -711,7 +728,6 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
     document.removeEventListener("themechange", handleThemeChange)
   })
 
-  const containers = [...document.getElementsByClassName("global-graph-outer")] as HTMLElement[]
   async function renderGlobalGraphImpl() {
     const slug = getFullSlug(window)
     for (const container of containers) {
@@ -918,7 +934,6 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
       }
     }
   }
-  renderGlobalGraphRef = renderGlobalGraphImpl
 
   function hideGlobalGraph() {
     cleanupGlobalGraphs()
