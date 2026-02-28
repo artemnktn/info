@@ -1,9 +1,16 @@
 @use "./base.scss";
+@use "./variables.scss" as *;
 
-/* Выделение текста: фиолетовая подсветка и текст #C066FF */
+/* Page title (Artem Nikitin) — не жирный */
+.page-title,
+.page-title a {
+  font-weight: 400 !important;
+}
+
+/* Выделение текста: фон #AC33FF, шрифт #5E009F */
 ::selection {
-  background: color-mix(in srgb, var(--tertiary) 60%, rgba(255, 255, 255, 0));
-  color: #c066ff !important;
+  background: #AC33FF !important;
+  color: #5E009F !important;
 }
 
 /* Acumin Pro (Adobe font) – place .woff2 files in quartz/static/fonts/ */
@@ -117,5 +124,179 @@ tbody {
 .content-properties,
 .content-properties * {
   color: var(--secondary) !important;
+}
+
+/* Content modal (граф + везде) — всегда загружаем для ссылок */
+.graph-content-preview {
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100%;
+  pointer-events: none;
+  display: none;
+  overflow: hidden;
+
+  &.active {
+    display: block;
+  }
+
+  .graph-content-inner {
+    pointer-events: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--lightgray);
+    background-color: var(--light);
+    border-radius: 5px;
+    box-sizing: border-box;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 85vh;
+    width: 90vw;
+    max-width: 700px;
+    overflow: hidden;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+
+    @media all and not ($desktop) {
+      width: 95%;
+      max-height: 90vh;
+    }
+  }
+
+  .graph-content-drag-handle {
+    position: relative;
+    cursor: move;
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid var(--lightgray);
+    user-select: none;
+    touch-action: none;
+  }
+
+  .graph-content-open-link {
+    position: absolute;
+    right: 3.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray);
+    padding: 0.25rem;
+    z-index: 3;
+
+    &:hover {
+      color: var(--dark);
+    }
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+
+  .graph-content-close {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.25rem;
+    color: var(--gray);
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    z-index: 3;
+
+    &:hover {
+      color: var(--dark);
+    }
+  }
+
+  .graph-content-body {
+    padding: 1rem 1.5rem;
+    padding-right: 2.5rem;
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  .graph-content-inner .graph-window-resize-handle {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    user-select: none;
+    z-index: 2;
+    touch-action: none;
+
+    @media (hover: none) {
+      width: 28px;
+      height: 28px;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      opacity: 0.6;
+    }
+
+    &:hover::after {
+      opacity: 1;
+    }
+
+    &.graph-window-resize-se {
+      right: 0;
+      bottom: 0;
+      cursor: nwse-resize;
+      &::after {
+        right: 4px;
+        bottom: 4px;
+        border-right: 2px solid var(--gray);
+        border-bottom: 2px solid var(--gray);
+      }
+    }
+    &.graph-window-resize-sw {
+      left: 0;
+      bottom: 0;
+      cursor: nesw-resize;
+      &::after {
+        left: 4px;
+        bottom: 4px;
+        border-left: 2px solid var(--gray);
+        border-bottom: 2px solid var(--gray);
+      }
+    }
+    &.graph-window-resize-ne {
+      right: 0;
+      top: 0;
+      cursor: nesw-resize;
+      &::after {
+        right: 4px;
+        top: 4px;
+        border-right: 2px solid var(--gray);
+        border-top: 2px solid var(--gray);
+      }
+    }
+    &.graph-window-resize-nw {
+      left: 0;
+      top: 0;
+      cursor: nwse-resize;
+      &::after {
+        left: 4px;
+        top: 4px;
+        border-left: 2px solid var(--gray);
+        border-top: 2px solid var(--gray);
+      }
+    }
+  }
 }
 

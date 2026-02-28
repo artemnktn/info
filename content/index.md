@@ -16,6 +16,6 @@ Linking spatial data science and critical urban theory in design and planning, I
 
 ---
 
-This is my digital garden (WIP) where I collect and publish ongoing and past projects, writings, notes, and code snippets.
+This is my digital garden where I collect and publish ongoing and past projects, writings, notes, and code snippets. This is not a curated portfolio, just a personal archive that keeps growing.
 
 

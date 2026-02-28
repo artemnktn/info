@@ -1,6 +1,7 @@
 import micromorph from "micromorph"
 import { FullSlug, RelativeURL, getFullSlug, normalizeRelativeURLs } from "../../util/path"
 import { fetchCanonical } from "./util"
+import { showContentModal } from "./contentModal"
 
 // adapted from `micromorph`
 // https://github.com/natemoo-re/micromorph
@@ -160,7 +161,8 @@ function createRouter() {
         return
       }
 
-      navigate(url, false)
+      // Open internal links in modal window (like graph)
+      showContentModal(url)
     })
 
     window.addEventListener("popstate", (event) => {
