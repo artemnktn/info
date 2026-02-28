@@ -161,25 +161,12 @@ function createRouter() {
         return
       }
 
-      // Tag links: filter graph view, no modal, no navigation
+      // Tag links: only highlight on graph, no navigation
       const pathSlug = url.pathname.replace(/^\//, "").replace(/\/$/, "")
-      const isTagLink =
-        pathSlug.startsWith("tags/") ||
-        pathSlug.includes("/tags/") ||
-        (a && a.classList.contains("tag-link"))
-      if (isTagLink) {
-        const slug = pathSlug.includes("/tags/")
-          ? "tags/" + pathSlug.split("/tags/").pop()!.split("/")[0]
-          : pathSlug.startsWith("tags/")
-            ? pathSlug
-            : a?.classList.contains("tag-link")
-              ? pathSlug
-              : null
-        if (slug && slug.startsWith("tags/")) {
-          document.dispatchEvent(
-            new CustomEvent("graph-highlight", { detail: { slug } }) as CustomEventMap["graph-highlight"],
-          )
-        }
+      if (pathSlug.startsWith("tags/")) {
+        document.dispatchEvent(
+          new CustomEvent("graph-highlight", { detail: { slug: pathSlug } }) as CustomEventMap["graph-highlight"],
+        )
         return
       }
 
