@@ -223,13 +223,19 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   }
 
   let hoveredNodeId: string | null = null
+  let selectedNodeId: string | null = null
   let hoveredNeighbours: Set<string> = new Set()
   const linkRenderData: LinkRenderData[] = []
   const nodeRenderData: NodeRenderData[] = []
-  function updateHoverInfo(newHoveredId: string | null) {
-    hoveredNodeId = newHoveredId
+  function updateHoverInfo(newId: string | null, fromPointer = true) {
+    if (fromPointer) {
+      hoveredNodeId = newId
+    } else {
+      selectedNodeId = newId
+    }
+    const effectiveId = selectedNodeId ?? hoveredNodeId
 
-    if (newHoveredId === null) {
+    if (effectiveId === null) {
       hoveredNeighbours = new Set()
       for (const n of nodeRenderData) {
         n.active = false
@@ -242,12 +248,12 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       hoveredNeighbours = new Set()
       for (const l of linkRenderData) {
         const linkData = l.simulationData
-        if (linkData.source.id === newHoveredId || linkData.target.id === newHoveredId) {
+        if (linkData.source.id === effectiveId || linkData.target.id === effectiveId) {
           hoveredNeighbours.add(linkData.source.id)
           hoveredNeighbours.add(linkData.target.id)
         }
 
-        l.active = linkData.source.id === newHoveredId || linkData.target.id === newHoveredId
+        l.active = linkData.source.id === effectiveId || linkData.target.id === effectiveId
       }
 
       for (const n of nodeRenderData) {
@@ -256,19 +262,29 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     }
   }
 
+  function setGraphHighlight(slug: string | null) {
+    updateHoverInfo(slug, false)
+    if (!dragging) {
+      renderPixiFromD3()
+    }
+  }
+
   let dragStartTime = 0
   let dragging = false
+
+  const getEffectiveHighlight = () => selectedNodeId ?? hoveredNodeId
 
   function renderLinks() {
     tweens.get("link")?.stop()
     const tweenGroup = new TweenGroup()
+    const effectiveId = getEffectiveHighlight()
 
     for (const l of linkRenderData) {
       let alpha = 1
 
       // if we are hovering over a node, we want to highlight the immediate neighbours
       // with full alpha and the rest with default alpha
-      if (hoveredNodeId) {
+      if (effectiveId) {
         alpha = l.active ? 1 : 0.2
       }
 
@@ -288,13 +304,14 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   function renderLabels() {
     tweens.get("label")?.stop()
     const tweenGroup = new TweenGroup()
+    const effectiveId = getEffectiveHighlight()
 
     const defaultScale = 1 / scale
     const activeScale = defaultScale * 1.1
     for (const n of nodeRenderData) {
       const nodeId = n.simulationData.id
 
-      if (hoveredNodeId === nodeId) {
+      if (effectiveId === nodeId) {
         tweenGroup.add(
           new Tweened<Text>(n.label).to(
             {
@@ -328,13 +345,14 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
   function renderNodes() {
     tweens.get("hover")?.stop()
+    const effectiveId = getEffectiveHighlight()
 
     const tweenGroup = new TweenGroup()
     for (const n of nodeRenderData) {
       let alpha = 1
 
       // if we are hovering over a node, we want to highlight the immediate neighbours
-      if (hoveredNodeId !== null && focusOnHover) {
+      if (effectiveId !== null && focusOnHover) {
         alpha = n.active ? 1 : 0.2
       }
 
@@ -560,7 +578,12 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   }
 
   requestAnimationFrame(animate)
+
+  ;(graph as HTMLElement & { __setGraphHighlight?: (id: string | null) => void }).__setGraphHighlight =
+    setGraphHighlight
+
   return () => {
+    delete (graph as HTMLElement & { __setGraphHighlight?: (id: string | null) => void }).__setGraphHighlight
     stopAnimation = true
     app.destroy()
   }
@@ -582,6 +605,19 @@ function cleanupGlobalGraphs() {
   }
   globalGraphCleanups = []
 }
+
+document.addEventListener("graph-highlight", (e: CustomEventMap["graph-highlight"]) => {
+    const slug = e.detail?.slug ?? null
+    const containers = document.querySelectorAll(
+      ".graph-container, .global-graph-container",
+    ) as NodeListOf<HTMLElement>
+    for (const el of containers) {
+      const fn = (el as HTMLElement & { __setGraphHighlight?: (id: string | null) => void })
+        .__setGraphHighlight
+      fn?.(slug)
+    }
+  },
+)
 
 document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
   const slug = e.detail.url

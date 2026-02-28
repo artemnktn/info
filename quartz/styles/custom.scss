@@ -7,10 +7,14 @@
   font-weight: 400 !important;
 }
 
-/* Выделение текста: фон #AC33FF, шрифт #5E009F */
+/* Выделение текста: фон #AC33FF, шрифт белый (светлая тема) / #5A0098 (тёмная) */
 ::selection {
   background: #AC33FF !important;
-  color: #5E009F !important;
+  color: #ffffff !important;
+}
+
+:root[saved-theme="dark"] ::selection {
+  color: #000000 !important;
 }
 
 /* Acumin Pro (Adobe font) – place .woff2 files in quartz/static/fonts/ */
@@ -75,6 +79,26 @@ a.internal.tag-link:hover,
   background: transparent !important;
   color: var(--tertiary) !important;
   border-color: var(--tertiary);
+}
+
+/* Поиск: в светлой теме при ховере — фиолетовый фон, белый текст */
+:root:not([saved-theme="dark"]) .search .result-card:hover,
+:root:not([saved-theme="dark"]) .search .result-card:focus,
+:root:not([saved-theme="dark"]) .search .result-card.focus {
+  background: var(--tertiary) !important;
+  color: #ffffff !important;
+
+  & h3,
+  & p,
+  & ul,
+  & li,
+  & a {
+    color: #ffffff !important;
+  }
+
+  & .match-tag {
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
 }
 
 /* горизонтальные разделительные линии — серые (--secondary, т.к. --lightgray у тебя фиолетовый) */
@@ -172,21 +196,28 @@ tbody {
     cursor: move;
     padding: 0.75rem 1.5rem;
     border-bottom: 1px solid var(--lightgray);
+    background: transparent !important;
     user-select: none;
     touch-action: none;
+
+    &.graph-content-bottom-handle {
+      border-bottom: none;
+      border-top: 1px solid var(--lightgray);
+    }
   }
 
   .graph-content-open-link {
     position: absolute;
-    right: 3.25rem;
+    left: 50%;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translate(-50%, -50%);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--gray);
     padding: 0.25rem;
     z-index: 3;
+    background: none !important;
 
     &:hover {
       color: var(--dark);
@@ -216,13 +247,12 @@ tbody {
     z-index: 3;
 
     &:hover {
-      color: var(--dark);
+      color: var(--tertiary);
     }
   }
 
   .graph-content-body {
     padding: 1rem 1.5rem;
-    padding-right: 2.5rem;
     flex: 1;
     min-height: 0;
     overflow: auto;

@@ -161,6 +161,15 @@ function createRouter() {
         return
       }
 
+      // Tag links: only highlight on graph, no navigation
+      const pathSlug = url.pathname.replace(/^\//, "").replace(/\/$/, "")
+      if (pathSlug.startsWith("tags/")) {
+        document.dispatchEvent(
+          new CustomEvent("graph-highlight", { detail: { slug: pathSlug } }) as CustomEventMap["graph-highlight"],
+        )
+        return
+      }
+
       // Open internal links in modal window (like graph)
       showContentModal(url)
     })

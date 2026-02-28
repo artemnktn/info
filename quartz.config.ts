@@ -11,7 +11,7 @@ const config: QuartzConfig = {
     pageTitle: "Artem Nikitin",
     pageTitleSuffix: "",
     enableSPA: true,
-    enablePopovers: true,
+    enablePopovers: false,
     analytics: {
       provider: "plausible",
     },
@@ -29,8 +29,8 @@ const config: QuartzConfig = {
       },
       colors: {
         lightMode: {
-          light: "#DFDFDF",
-          lightgray: "#8C00FF",
+          light: "#E8E8E8",
+          lightgray: "#000000",
           gray: "#5A5A5A",
           darkgray: "#333333",
           dark: "#000000",

@@ -15,6 +15,16 @@ export async function showContentModal(targetUrl: URL) {
   const dragHandle = document.createElement("div")
   dragHandle.className = "graph-content-drag-handle"
 
+  const closeBtn = document.createElement("button")
+  closeBtn.className = "graph-content-close"
+  closeBtn.setAttribute("aria-label", "Close")
+  closeBtn.innerHTML = "×"
+  closeBtn.type = "button"
+  dragHandle.appendChild(closeBtn)
+
+  const bottomHandle = document.createElement("div")
+  bottomHandle.className = "graph-content-drag-handle graph-content-bottom-handle"
+
   const openLink = document.createElement("a")
   openLink.href = targetUrl.toString()
   openLink.className = "internal graph-content-open-link"
@@ -22,15 +32,28 @@ export async function showContentModal(targetUrl: URL) {
   openLink.dataset.routerIgnore = ""
   openLink.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`
   openLink.onclick = () => close()
+  bottomHandle.appendChild(openLink)
 
-  const closeBtn = document.createElement("button")
-  closeBtn.className = "graph-content-close"
-  closeBtn.setAttribute("aria-label", "Close")
-  closeBtn.innerHTML = "×"
-  closeBtn.type = "button"
-
-  dragHandle.appendChild(openLink)
-  dragHandle.appendChild(closeBtn)
+  bottomHandle.onmousedown = (e: MouseEvent) => {
+    if ((e.target as HTMLElement).closest("button, a")) return
+    e.preventDefault()
+    const pid = (e as unknown as PointerEvent).pointerId
+    startDrag(e.clientX, e.clientY)
+    if (pid !== undefined && bottomHandle.setPointerCapture) {
+      bottomHandle.setPointerCapture(pid)
+    }
+  }
+  bottomHandle.ontouchstart = (e: TouchEvent) => {
+    if ((e.target as HTMLElement).closest("button, a")) return
+    if (e.touches.length > 0) {
+      e.preventDefault()
+      const t = e.touches[0]
+      startDrag(t.clientX, t.clientY)
+      if (bottomHandle.setPointerCapture) {
+        bottomHandle.setPointerCapture(t.identifier)
+      }
+    }
+  }
 
   let posX = 0,
     posY = 0
@@ -111,6 +134,7 @@ export async function showContentModal(targetUrl: URL) {
   }
 
   function close() {
+    document.dispatchEvent(new CustomEvent("graph-highlight", { detail: { slug: null } }) as CustomEventMap["graph-highlight"])
     overlay.classList.remove("active")
     overlay.addEventListener("transitionend", () => overlay.remove(), { once: true })
     document.removeEventListener("keydown", onEsc)
@@ -254,9 +278,15 @@ export async function showContentModal(targetUrl: URL) {
 
   inner.appendChild(dragHandle)
   inner.appendChild(contentWrap)
+  inner.appendChild(bottomHandle)
   overlay.appendChild(inner)
   document.body.appendChild(overlay)
   overlay.classList.add("active")
+
+  const pathSlug = targetUrl.pathname.replace(/^\//, "").replace(/\/$/, "")
+  if (pathSlug.startsWith("tags/")) {
+    document.dispatchEvent(new CustomEvent("graph-highlight", { detail: { slug: pathSlug } }) as CustomEventMap["graph-highlight"])
+  }
 
   if (cascadeOffset) {
     setInnerPos(cascadeOffset, cascadeOffset)
