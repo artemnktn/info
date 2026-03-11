@@ -1,55 +1,57 @@
 @use "./base.scss";
 @use "./variables.scss" as *;
 
-/* Page title (Artem Nikitin) — не жирный */
+/* Page title (Artem Nikitin) — medium */
 .page-title,
-.page-title a {
-  font-weight: 400 !important;
+.page-title a,
+.page-title a:hover {
+  font-weight: 500 !important;
 }
-
-/* Выделение текста: фон #AC33FF, шрифт белый (светлая тема) / #5A0098 (тёмная) */
-::selection {
-  background: #AC33FF !important;
+/* Светлая тема: чёрный */
+:root:not([saved-theme="dark"]) .page-title,
+:root:not([saved-theme="dark"]) .page-title a,
+:root:not([saved-theme="dark"]) .page-title a:hover {
+  color: #000000 !important;
+}
+/* Тёмная тема: белый */
+:root[saved-theme="dark"] .page-title,
+:root[saved-theme="dark"] .page-title a,
+:root[saved-theme="dark"] .page-title a:hover {
   color: #ffffff !important;
 }
 
-:root[saved-theme="dark"] ::selection {
+/* Выделение текста: салатовый #C8FF00 */
+::selection {
+  background: #C8FF00 !important;
   color: #000000 !important;
 }
 
-/* Acumin Pro (Adobe font) – place .woff2 files in quartz/static/fonts/ */
-$font-base: "";
-
-@font-face {
-  font-family: "Acumin Pro";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("#{$font-base}/static/fonts/AcuminPro-Regular.woff2") format("woff2");
+:root[saved-theme="dark"] ::selection {
+  background: #C8FF00 !important;
+  color: #000000 !important;
 }
 
-@font-face {
-  font-family: "Acumin Pro";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("#{$font-base}/static/fonts/AcuminPro-Semibold.woff2") format("woff2");
+/* Roboto Mono везде. Загружается через Google Fonts в quartz.config.ts */
+
+/* Курсор — маленький салатовый круг #C8FF00 (только для desktop, не touch) */
+@media (pointer: fine) {
+  body,
+  body * {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='4' fill='%23D0FF00' stroke='none'/%3E%3C/svg%3E") 8 8, auto !important;
+  }
+  a, button, [role="button"], [cursor="pointer"] {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='4' fill='%23D0FF00' stroke='none'/%3E%3C/svg%3E") 8 8, pointer !important;
+  }
 }
 
-@font-face {
-  font-family: "Acumin Pro";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("#{$font-base}/static/fonts/AcuminPro-Bold.woff2") format("woff2");
+/* Основной шрифт меньше */
+:root {
+  font-size: 14px !important;
 }
 
-@font-face {
-  font-family: "Acumin Pro";
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-  src: url("#{$font-base}/static/fonts/AcuminPro-Italic.woff2") format("woff2");
+/* ссылки — обычная насыщенность, не жирные */
+a {
+  font-weight: 400 !important;
 }
 
 /* цвет ссылок чуть светлее */
@@ -57,7 +59,7 @@ a {
   color: color-mix(in srgb, var(--secondary) 75%, var(--darkgray)) !important;
 }
 a:hover {
-  color: color-mix(in srgb, var(--tertiary) 85%, var(--darkgray)) !important;
+  color: var(--tertiary) !important;
 }
 
 /* теги: тонкая обводка (как линии), серые по умолчанию, фиолетовые при наведении — как ссылки */
@@ -67,8 +69,8 @@ a.internal.tag-link,
   background: transparent !important;
   color: var(--secondary) !important;
   border: 1px solid var(--secondary);
-  border-radius: 5px;
-  padding: 4px 10px;
+  border-radius: 0;
+  padding: 4px 6px;
   font-weight: 500;
   text-decoration: none !important;
   transition: color 0.2s ease, border-color 0.2s ease;
@@ -77,33 +79,39 @@ a.internal.tag-link,
 a.internal.tag-link:hover,
 .tags a.internal.tag-link:hover {
   background: transparent !important;
-  color: var(--tertiary) !important;
-  border-color: var(--tertiary);
+  color: #ffffff !important;
+  border-color: #ffffff;
 }
 
 @media all and ($mobile) {
   .tags {
-    row-gap: 0.6rem !important;
+    row-gap: 1.2rem !important;
   }
 }
 
-/* Поиск: в светлой теме при ховере — фиолетовый фон, белый текст */
-:root:not([saved-theme="dark"]) .search .result-card:hover,
-:root:not([saved-theme="dark"]) .search .result-card:focus,
-:root:not([saved-theme="dark"]) .search .result-card.focus {
-  background: var(--tertiary) !important;
-  color: #ffffff !important;
+/* Поиск: выделение текста — белый фон, чёрный текст (инверсия для читаемости) */
+.search ::selection {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* Поиск: при ховере/фокусе — белый фон, чёрный текст (светлая и тёмная темы) */
+.search .result-card:hover,
+.search .result-card:focus,
+.search .result-card.focus {
+  background: #ffffff !important;
+  color: #000000 !important;
 
   & h3,
   & p,
   & ul,
   & li,
   & a {
-    color: #ffffff !important;
+    color: #000000 !important;
   }
 
   & .match-tag {
-    color: rgba(255, 255, 255, 0.9) !important;
+    color: rgba(0, 0, 0, 0.9) !important;
   }
 }
 
@@ -177,7 +185,7 @@ tbody {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     border: 1px solid var(--lightgray);
     background-color: var(--light);
-    border-radius: 5px;
+    border-radius: 0;
     box-sizing: border-box;
     position: fixed;
     left: 50%;
@@ -254,7 +262,7 @@ tbody {
     transition: color 0.2s ease;
 
     &:hover {
-      color: var(--tertiary);
+      color: #ffffff;
     }
   }
 
@@ -337,16 +345,39 @@ tbody {
   }
 }
 
-/* Скругления 5px для окон, фреймов, кнопок */
+/* Без скруглений, без фиолетового */
 :root {
-  --button-radius: 5px !important;
-  --modal-radius: 5px !important;
-  --input-radius: 5px !important;
-  --callout-radius: 5px !important;
-  --code-radius: 5px !important;
-  --menu-radius: 5px !important;
-  --pill-radius: 5px !important;
-  --nav-tag-radius: 5px !important;
+  --textHighlight: #C8FF0088 !important;
+  --color-purple: #ffffff !important;
+  --color-purple-rgb: 255, 255, 255 !important;
+  --sync-avatar-color-7: #ffffff !important;
+  --button-radius: 0 !important;
+  --modal-radius: 0 !important;
+  --input-radius: 0 !important;
+  --callout-radius: 0 !important;
+  --code-radius: 0 !important;
+  --menu-radius: 0 !important;
+  --pill-radius: 0 !important;
+  --nav-tag-radius: 0 !important;
+  --bases-embed-border-radius: 0 !important;
+  --bases-table-cell-radius-active: 0 !important;
+  --bases-table-cell-radius-focus: 0 !important;
+  --bases-table-container-border-radius: 0 !important;
+  --checkbox-radius: 0 !important;
+  --clickable-icon-radius: 0 !important;
+  --footnote-radius: 0 !important;
+  --list-bullet-radius: 0 !important;
+  --metadata-border-radius: 0 !important;
+  --metadata-property-radius: 0 !important;
+  --metadata-property-radius-focus: 0 !important;
+  --metadata-property-radius-hover: 0 !important;
+  --radius-l: 0 !important;
+  --radius-m: 0 !important;
+  --radius-s: 0 !important;
+  --radius-xl: 0 !important;
+  --scrollbar-radius: 0 !important;
+  --table-selection-border-radius: 0 !important;
+  --tag-radius: 0 !important;
 }
 
 .graph > .graph-outer,
@@ -371,7 +402,13 @@ code:not(pre code),
 .callout,
 .explorer ul li a,
 .text-highlight,
-a.internal {
-  border-radius: 5px !important;
+a.internal,
+img,
+audio,
+video,
+iframe,
+.external-embed.youtube,
+figure[data-rehype-pretty-code-figure] > [data-rehype-pretty-code-title] {
+  border-radius: 0 !important;
 }
 

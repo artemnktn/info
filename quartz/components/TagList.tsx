@@ -46,9 +46,9 @@ TagList.css = `
 }
 
 a.internal.tag-link {
-  border-radius: 5px;
+  border-radius: 0;
   background-color: var(--highlight);
-  padding: 0.2rem 0.4rem;
+  padding: 0.2rem 0.3rem;
   margin: 0 0.1rem;
 }
 `
