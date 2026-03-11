@@ -10,7 +10,7 @@
   & > .search-button {
     background-color: transparent;
     border: 1px var(--lightgray) solid;
-    border-radius: 4px;
+    border-radius: 5px;
     font-family: inherit;
     font-size: inherit;
     height: 2rem;
@@ -30,8 +30,8 @@
 
     & svg {
       cursor: pointer;
-      width: 18px;
-      min-width: 18px;
+      width: 15px;
+      min-width: 15px;
       margin: 0 0.5rem;
 
       .search-path {
@@ -70,7 +70,7 @@
 
       & > * {
         width: 100%;
-        border-radius: 7px;
+        border-radius: 5px;
         background: var(--light);
         box-shadow:
           0 14px 50px rgba(27, 33, 48, 0.12),
@@ -218,7 +218,7 @@
             }
 
             & > ul > li > p {
-              border-radius: 8px;
+              border-radius: 5px;
               background-color: var(--highlight);
               padding: 0.2rem 0.4rem;
               margin: 0 0.1rem;

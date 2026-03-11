@@ -14,6 +14,7 @@ link:
   - https://novaya.co.uk/urbandesigncodes
 cssclasses:
   - note
+  - writing
 ---
 ## Urban Design Codes
 
