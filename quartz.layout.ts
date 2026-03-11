@@ -45,6 +45,7 @@ export const defaultContentPageLayout: PageLayout = {
     Component.Graph(),
     Component.DesktopOnly(Component.TableOfContents()),
     Component.Backlinks(),
+    Component.DesktopOnly(Component.HongKongTime()),
   ],
 }
 
@@ -65,5 +66,7 @@ beforeBody: [Component.Breadcrumbs(), Component.ArticleTitle() /*, Component.Con
     }),
     Component.DesktopOnly(Component.Contact()),
   ],
-  right: [],
+  right: [
+    Component.DesktopOnly(Component.HongKongTime()),
+  ],
 }

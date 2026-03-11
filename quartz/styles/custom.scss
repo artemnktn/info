@@ -52,11 +52,11 @@
 /* Градиент снизу — плавный переход */
 /* Светлая тема: чёрный градиент */
 :root:not([saved-theme="dark"]) body {
-  background: linear-gradient(to bottom, var(--light) 0%, var(--light) 40%, rgba(0, 0, 0, 0.15) 100%) !important;
+  background: linear-gradient(to bottom, var(--light) 0%, var(--light) 20%, #000000 100%) !important;
 }
 /* Тёмная тема: белый градиент */
 :root[saved-theme="dark"] body {
-  background: linear-gradient(to bottom, var(--light) 0%, var(--light) 40%, rgba(255, 255, 255, 0.9) 100%) !important;
+  background: linear-gradient(to bottom, var(--light) 0%, var(--light) 50%, rgba(255, 255, 255, 0.9) 100%) !important;
 }
 
 /* ссылки — обычная насыщенность, не жирные */
