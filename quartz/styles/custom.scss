@@ -33,30 +33,21 @@
 
 /* Roboto Mono везде. Загружается через Google Fonts в quartz.config.ts */
 
-/* Курсор — маленький салатовый круг #C8FF00 (только для desktop, не touch) */
-@media (pointer: fine) {
-  body,
-  body * {
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='4' fill='%23D0FF00' stroke='none'/%3E%3C/svg%3E") 8 8, auto !important;
-  }
-  a, button, [role="button"], [cursor="pointer"] {
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='4' fill='%23D0FF00' stroke='none'/%3E%3C/svg%3E") 8 8, pointer !important;
-  }
-}
-
 /* Основной шрифт меньше */
 :root {
   font-size: 14px !important;
 }
 
-/* Градиент снизу — плавный переход */
-/* Светлая тема: чёрный градиент */
-:root:not([saved-theme="dark"]) body {
-  background: linear-gradient(to bottom, var(--light) 0%, var(--light) 20%, #000000 100%) !important;
+/* Sidebar: revised и HK — белые (в тёмной теме) */
+:root[saved-theme="dark"] .contact-sidebar,
+:root[saved-theme="dark"] .hongkong-time-wrapper,
+:root[saved-theme="dark"] .hongkong-time-wrapper .hongkong-time {
+  color: #ffffff !important;
 }
-/* Тёмная тема: белый градиент */
+
+/* Тёмная тема: мягкий белый градиент снизу */
 :root[saved-theme="dark"] body {
-  background: linear-gradient(to bottom, var(--light) 0%, var(--light) 50%, rgba(255, 255, 255, 0.9) 100%) !important;
+  background: linear-gradient(to bottom, var(--light) 0%, var(--light) 70%, rgba(255, 255, 255, 0.25) 100%) !important;
 }
 
 /* ссылки — обычная насыщенность, не жирные */
