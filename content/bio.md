@@ -1,6 +1,6 @@
 ---
 title: about me
-draft: false
+draft: true
 tags:
 ---
 

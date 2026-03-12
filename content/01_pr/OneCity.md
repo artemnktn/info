@@ -6,6 +6,7 @@ tags:
   - gis
   - design
 date: 2021-present
+project: true
 Location: Johannesburg, South Africa
 My role: Project Lead, Urban Strategist
 Team: NOVAYAlabs, SARChi (University of the Witwatersrand)

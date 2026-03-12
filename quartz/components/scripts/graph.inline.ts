@@ -33,6 +33,7 @@ type NodeData = {
   text: string
   tags: string[]
   cssclasses: string[]
+  project?: boolean
 } & SimulationNodeDatum
 
 type SimpleLinkData = {
@@ -225,11 +226,13 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
   const nodes = [...neighbourhood].map((url) => {
     const text = url.startsWith("tags/") ? "#" + url.substring(5) : (data.get(url)?.title ?? url)
+    const cd = data.get(url)
     return {
       id: url,
       text,
-      tags: data.get(url)?.tags ?? [],
-      cssclasses: data.get(url)?.cssclasses ?? [],
+      tags: cd?.tags ?? [],
+      cssclasses: cd?.cssclasses ?? [],
+      project: cd?.project ?? (cd?.cssclasses ?? []).includes("project"),
     }
   })
 
@@ -578,16 +581,22 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
           // if the time between mousedown and mouseup is short, we consider it a click
           if (Date.now() - dragStartTime < 500) {
             const node = graphData.nodes.find((n) => n.id === event.subject.id) as NodeData
-            const targ = resolveRelative(fullSlug, node.id)
-            showContentModal(new URL(targ, window.location.toString()))
+            const isTag = node.id.startsWith("tags/")
+            if (!node.project && !isTag) {
+              const targ = resolveRelative(fullSlug, node.id)
+              showContentModal(new URL(targ, window.location.toString()))
+            }
           }
         }),
     )
   } else {
     for (const node of nodeRenderData) {
       node.gfx.on("click", () => {
-        const targ = resolveRelative(fullSlug, node.simulationData.id)
-        showContentModal(new URL(targ, window.location.toString()))
+        const isTag = node.simulationData.id.startsWith("tags/")
+        if (!node.simulationData.project && !isTag) {
+          const targ = resolveRelative(fullSlug, node.simulationData.id)
+          showContentModal(new URL(targ, window.location.toString()))
+        }
       })
     }
   }

@@ -7,6 +7,7 @@ tags:
   - policy
   - mapping
 date: "2025"
+project: true
 Location: Derbent, Moscow, Ulan-Ude
 My role: Product Lead
 Team: NOVAYAlabs
@@ -18,7 +19,7 @@ cssclasses:
 ---
 ## Urban Design Codes
 
-C 2018
+C 2018sadl;kas;kd;ak
 
 
 

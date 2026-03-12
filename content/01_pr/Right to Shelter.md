@@ -6,6 +6,7 @@ tags:
   - design
   - mapping
 date: "2025"
+project: true
 Location: Negev/Naqab
 My role: Design Strategist, Researcher
 Team: ACP lab

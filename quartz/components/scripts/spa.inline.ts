@@ -162,11 +162,20 @@ function createRouter() {
       }
 
       // Tag links: only highlight on graph, no navigation
-      // Handle both root path (/tags/foo) and subpath (/info/tags/foo on GitHub Pages)
       const pathSlug = url.pathname.replace(/^\//, "").replace(/\/$/, "")
       const tagMatch = pathSlug.match(/(?:^|\/)tags\/([^/]+)/)
       if (tagMatch) {
         const slug = "tags/" + tagMatch[1]
+        document.dispatchEvent(
+          new CustomEvent("graph-highlight", { detail: { slug } }) as CustomEventMap["graph-highlight"],
+        )
+        return
+      }
+
+      // Project links: open graph with highlight, no content modal
+      const anchor = getOpts(event) && (event.target as Element)?.closest?.("a")
+      if (anchor && "project" in anchor.dataset) {
+        const slug = pathSlug as FullSlug
         document.dispatchEvent(
           new CustomEvent("graph-highlight", { detail: { slug } }) as CustomEventMap["graph-highlight"],
         )
