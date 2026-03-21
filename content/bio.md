@@ -3,6 +3,14 @@ title: about me
 draft: true
 tags:
 ---
+short bio:
+
+
+
+
+not to short bio:
+
+
 
  I trained as an architect in Saint Petersburg and later received an *MA in Smart Cities and Urban Informatics in Jerusalem*. Prior to this, I gained over seven years of experience working on city planning and web-GIS projects across multiple geographies. 
 
