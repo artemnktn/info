@@ -20,11 +20,12 @@ const config: QuartzConfig = {
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "modified",
     theme: {
-      fontOrigin: "googleFonts",
+      fontOrigin: "local",
       cdnCaching: true,
       typography: {
-        header: "Roboto Mono",
-        body: "Roboto Mono",
+        header: "Acumin Pro",
+        body: "Acumin Pro",
+        /* Monospace stack; Roboto Mono is not loaded — browser uses system mono fallbacks */
         code: "Roboto Mono",
       },
       colors: {

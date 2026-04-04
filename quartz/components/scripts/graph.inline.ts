@@ -80,7 +80,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   removeAllChildren(graph)
 
   let cfg = JSON.parse(graph.dataset["cfg"]!) as D3Config
-  // На главной странице показываем полный граф (как Global Graph). simplifySlug("index") даёт "/"
+  // On the index page, show the full graph (like Global Graph). simplifySlug("index") yields "/"
   const isIndex = slug === "/" || slug === "index" || slug === ""
   const isLocalContainer = graph.classList.contains("graph-container")
   if (isIndex && isLocalContainer) {

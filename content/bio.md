@@ -5,10 +5,12 @@ tags:
 ---
 short bio:
 
+Working across critical urban theories and spatial data science, I use GIS, spatial modelling, and data visualisation to trace how policy and emerging technologies re/produce *urban*: economies, design and governance. My current work focuses on the spatial political economy of urban form in Hong Kong’s high-density, vertical context. Alongside this, I do counter-cartography and other mapping practices. You can find my formal bio here.
 
-
-
+This is my digital garden (*WIP*) where I collect and publish ongoing and past projects, writings, notes, and code snippets. This is not a curated portfolio, just a personal growing archive.
 not to short bio:
+
+My research brings critical urban theory into spatial data science. I use GIS, spatial modelling, and data visualisation to trace how policy and emerging technologies re/produce urban: economies, design and governance.
 
 
 

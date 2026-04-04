@@ -1,26 +1,77 @@
 @use "./base.scss";
 @use "./variables.scss" as *;
 
-/* Page title (Artem Nikitin) — medium */
+/* Acumin Pro — licensed .otf files in quartz/static/fonts/ */
+@font-face {
+  font-family: "Acumin Pro";
+  src: url("/static/fonts/Acumin-RPro.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Acumin Pro";
+  src: url("/static/fonts/Acumin-ItPro.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* No separate semibold file — map 600 to bold */
+@font-face {
+  font-family: "Acumin Pro";
+  src: url("/static/fonts/Acumin-BdPro.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Acumin Pro";
+  src: url("/static/fonts/Acumin-BdPro.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Acumin Pro";
+  src: url("/static/fonts/Acumin-BdItPro.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Headings: normal weight (400), not bold */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 400 !important;
+}
+
 .page-title,
 .page-title a,
 .page-title a:hover {
-  font-weight: 500 !important;
+  font-weight: 400 !important;
 }
-/* Светлая тема: чёрный */
+/* Light theme: black page title */
 :root:not([saved-theme="dark"]) .page-title,
 :root:not([saved-theme="dark"]) .page-title a,
 :root:not([saved-theme="dark"]) .page-title a:hover {
   color: #000000 !important;
 }
-/* Тёмная тема: белый */
+/* Dark theme: white page title */
 :root[saved-theme="dark"] .page-title,
 :root[saved-theme="dark"] .page-title a,
 :root[saved-theme="dark"] .page-title a:hover {
   color: #ffffff !important;
 }
 
-/* Выделение текста: салатовый #C8FF00 */
+/* Text selection: lime #C8FF00 */
 ::selection {
   background: #C8FF00 !important;
   color: #000000 !important;
@@ -31,31 +82,138 @@
   color: #000000 !important;
 }
 
-/* Roboto Mono везде. Загружается через Google Fonts в quartz.config.ts */
+/* Body/headings: Acumin Pro (see @font-face above). Code: system mono stack via --codeFont */
 
-/* Основной шрифт меньше */
 :root {
-  font-size: 14px !important;
+  font-size: 16px !important;
 }
 
-/* Sidebar: revised и HK — белые (в тёмной теме) */
+/* Vertical rules between columns only (no horizontal rules or outer page frame) */
+.page > #quartz-body .sidebar.left {
+  @media all and not ($mobile) {
+    border-right: 1px solid var(--secondary);
+    padding-right: 4rem;
+  }
+}
+
+.page > #quartz-body div.sidebar.right {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+
+  /* Same horizontal padding as div.center so Graph View lines up with article text */
+  @media all and ($tablet) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  @media all and ($mobile) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  @media all and ($desktop) {
+    border-left: 1px solid var(--secondary);
+    padding-left: 2rem;
+    padding-right: 2rem;
+    width: 100%;
+  }
+
+  /*
+   * Below desktop, the default theme uses flex-direction: row and flex: 1 on all children,
+   * so the graph and HK time sit on one row and the clock jumps to the top.
+   * Keep a column: graph on top, vertical spacer, HK time at the bottom.
+   */
+  @media all and not ($desktop) {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    align-content: flex-start;
+    gap: 1.2rem;
+
+    & > * {
+      flex: 0 1 auto !important;
+      max-height: none !important;
+    }
+
+    & > .sidebar-footer-spacer {
+      flex: 1 1 auto !important;
+      min-height: 0;
+      width: 100%;
+    }
+
+    & .graph > .graph-outer {
+      max-height: 24rem;
+    }
+  }
+}
+
+/* Graph View: stay within column bounds like the center column */
+.page > #quartz-body div.sidebar.right .graph {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+}
+
+.page > #quartz-body div.sidebar.right .graph > h3 {
+  max-width: 100%;
+}
+
+.page > #quartz-body div.sidebar.right .graph > .graph-outer {
+  box-sizing: border-box;
+  max-width: 100%;
+  width: 100%;
+}
+
+.page > #quartz-body div.sidebar.right .graph .graph-container {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* Center column: padding + no overflow past vertical rules (grid min-width: 0) */
+.page > #quartz-body div.center {
+  box-sizing: border-box;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  width: 100%;
+
+  @media all and not ($mobile) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  @media all and ($desktop) {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.page > #quartz-body div.center .page-header,
+.page > #quartz-body div.center article,
+.page > #quartz-body div.center .page-footer {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Sidebar: revised date + HK time — white in dark theme */
 :root[saved-theme="dark"] .contact-sidebar,
 :root[saved-theme="dark"] .hongkong-time-wrapper,
 :root[saved-theme="dark"] .hongkong-time-wrapper .hongkong-time {
   color: #ffffff !important;
 }
 
-/* Тёмная тема: мягкий белый градиент снизу */
+/* Dark theme: soft white gradient at bottom */
 :root[saved-theme="dark"] body {
   background: linear-gradient(to bottom, var(--light) 0%, var(--light) 70%, rgba(255, 255, 255, 0.25) 100%) !important;
 }
 
-/* ссылки — обычная насыщенность, не жирные */
+/* Links: normal weight, not bold */
 a {
   font-weight: 400 !important;
 }
 
-/* цвет ссылок чуть светлее */
+/* Link color slightly lighter */
 a {
   color: color-mix(in srgb, var(--secondary) 75%, var(--darkgray)) !important;
 }
@@ -63,7 +221,7 @@ a:hover {
   color: var(--tertiary) !important;
 }
 
-/* теги: тонкая обводка (как линии), серые по умолчанию, фиолетовые при наведении — как ссылки */
+/* Tags: thin outline; gray by default, white on hover (like links) */
 
 a.internal.tag-link,
 .tags a.internal.tag-link {
@@ -90,13 +248,13 @@ a.internal.tag-link:hover,
   }
 }
 
-/* Поиск: выделение текста — белый фон, чёрный текст (инверсия для читаемости) */
+/* Search: selection — white background, black text (readable on results) */
 .search ::selection {
   background: #ffffff !important;
   color: #000000 !important;
 }
 
-/* Поиск: при ховере/фокусе — белый фон, чёрный текст (светлая и тёмная темы) */
+/* Search: hover/focus on result cards — white background, black text */
 .search .result-card:hover,
 .search .result-card:focus,
 .search .result-card.focus {
@@ -116,7 +274,7 @@ a.internal.tag-link:hover,
   }
 }
 
-/* горизонтальные разделительные линии — серые (--secondary, т.к. --lightgray у тебя фиолетовый) */
+/* Horizontal rules — gray (--secondary; --lightgray is purple in this theme) */
 hr {
   background-color: var(--secondary) !important;
 }
@@ -133,14 +291,14 @@ tr {
   border-bottom-color: var(--secondary) !important;
 }
 
-/* уменьшаем межстрочное расстояние для более компактного текста */
+/* Tighter line height for compact body text */
 p,
 li,
 tbody {
   line-height: 1.4rem !important;
 }
 
-/* убираем кнопку-переключатель Explorer, структура папок всегда видна */
+/* Hide Explorer toggle; folder tree always expanded */
 .explorer .title-button,
 .explorer .desktop-explorer {
   display: none !important;
@@ -157,7 +315,7 @@ tbody {
   margin-top: 0 !important;
 }
 
-/* значения в properties — серые (переопределяем наследование) */
+/* Properties panel values — gray (override inherited color) */
 .popover-hint .content-properties,
 .popover-hint .content-properties *,
 .content-properties,
@@ -165,7 +323,7 @@ tbody {
   color: var(--secondary) !important;
 }
 
-/* Content modal (граф + везде) — всегда загружаем для ссылок */
+/* Content preview modal (graph + internal links) */
 .graph-content-preview {
   position: fixed;
   z-index: 9999;
@@ -346,7 +504,7 @@ tbody {
   }
 }
 
-/* Без скруглений, без фиолетового */
+/* No border-radius; neutralize purple accent vars */
 :root {
   --textHighlight: #C8FF0088 !important;
   --color-purple: #ffffff !important;
