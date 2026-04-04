@@ -17,7 +17,7 @@ const config: QuartzConfig = {
     },
     locale: "en-US",
     baseUrl: "artemnikitin.info",
-    ignorePatterns: ["private", "templates", ".obsidian"],
+    ignorePatterns: ["private", "templates", ".obsidian", "Page_Templates"],
     defaultDateType: "modified",
     theme: {
       fontOrigin: "local",
