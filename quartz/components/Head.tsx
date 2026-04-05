@@ -65,7 +65,7 @@ export default (() => {
             <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
             <link
               rel="stylesheet"
-              href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,600;1,400&display=swap"
+              href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;1,400&display=swap"
             />
           </>
         )}

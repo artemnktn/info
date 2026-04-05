@@ -22,10 +22,10 @@ const config: QuartzConfig = {
     theme: {
       fontOrigin: "local",
       cdnCaching: true,
-      localFontPreload: "static/fonts/Unica77LL-Regular.woff2",
       typography: {
-        header: "Unica77 LL",
-        body: "Unica77 LL",
+        /* No bundled body font: uses system UI fonts; "Roboto" matches stack + OG image generation (Google). */
+        header: "Roboto",
+        body: "Roboto",
         code: "Roboto Mono",
       },
       colors: {

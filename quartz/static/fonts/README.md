@@ -1,14 +1,10 @@
 # Fonts
 
-## Unica77 LL (body & headings)
+## Body & headings
 
-From [Lineto](https://www.lineto.com/). The CSS family name in the files is **`Unica77 LL`**.
+No bundled `.woff2` for body text. In `quartz.config.ts`, `header` / `body` are set to **`Roboto`** so the stack matches `theme.ts` (Roboto → system-ui → Segoe → …) and **OG images** can fetch **Roboto** from Google Fonts for Satori.
 
-Current file:
-
-- `Unica77LL-Regular.woff2` — Regular (400)
-
-If you add more **`.woff2`** cuts (Medium, Bold, Italic, …), add matching `@font-face` blocks in `quartz/styles/custom.scss` and map weights (page title uses **500** via `.page-title`).
+If **Roboto** is not installed locally, the browser uses the next families in that stack (system UI sans).
 
 ## Roboto Mono (code)
 
@@ -16,4 +12,4 @@ Loaded from **Google Fonts** via `<link>` in `Head.tsx` when `fontOrigin` is `lo
 
 ## Other files
 
-`favorit-font-family/` and Acumin `.otf` files are unused by the site CSS unless you wire them in `custom.scss`.
+`favorit-font-family/` and Acumin `.otf` files are unused unless you add `@font-face` rules in `custom.scss`.

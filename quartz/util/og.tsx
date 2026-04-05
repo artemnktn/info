@@ -11,7 +11,7 @@ import readingTime from "reading-time"
 import { i18n } from "../i18n"
 import { styleText } from "util"
 
-const defaultHeaderWeight = [700]
+const defaultHeaderWeight = [400]
 const defaultBodyWeight = [400]
 
 export async function getSatoriFonts(headerFont: FontSpecification, bodyFont: FontSpecification) {
@@ -254,7 +254,7 @@ export const defaultImage: SocialImageOptions["imageStructure"] = ({
             margin: 0,
             fontSize: useSmallerFont ? 64 : 72,
             fontFamily: headerFont,
-            fontWeight: 700,
+            fontWeight: 400,
             color: cfg.theme.colors[colorScheme].dark,
             lineHeight: 1.2,
             display: "-webkit-box",

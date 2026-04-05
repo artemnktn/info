@@ -1,20 +1,13 @@
 @use "./base.scss";
 @use "./variables.scss" as *;
 
-/* Unica77 LL — .woff2 in static/fonts/ (see fonts/README.md). Only Regular provided: heavier weights / italic use browser synthesis. Roboto Mono: Head.tsx when fontOrigin is local. */
-@font-face {
-  font-family: "Unica77 LL";
-  src: url("/static/fonts/Unica77LL-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
+/* Body/header: stack from quartz.config + theme.ts. Roboto Mono: Head.tsx when fontOrigin is local. */
 
-/* Page title (Artem Nikitin) — medium */
+/* Page title (Artem Nikitin) — regular */
 .page-title,
 .page-title a,
 .page-title a:hover {
-  font-weight: 500 !important;
+  font-weight: 400 !important;
 }
 /* Светлая тема: чёрный */
 :root:not([saved-theme="dark"]) .page-title,
@@ -82,7 +75,7 @@ a.internal.tag-link,
   border: 1px solid var(--secondary);
   border-radius: 0;
   padding: 4px 6px;
-  font-weight: 500;
+  font-weight: 400;
   text-decoration: none !important;
   transition: color 0.2s ease, border-color 0.2s ease;
 }
