@@ -22,7 +22,7 @@
     min-width: 0;
     min-height: 0;
     color: var(--darkgray);
-    font-family: var(--bodyFont);
+    font-family: var(--bodyFont), system-ui, sans-serif;
     transition: opacity 0.1s ease;
   }
 }
