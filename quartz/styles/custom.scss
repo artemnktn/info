@@ -274,6 +274,11 @@ a.internal.tag-link:hover,
   }
 }
 
+/* Remove layout <hr> between article and page footer (markdown --- inside article unchanged) */
+.page > #quartz-body div.center > hr {
+  display: none;
+}
+
 /* Horizontal rules — gray (--secondary; --lightgray is purple in this theme) */
 hr {
   background-color: var(--secondary) !important;
