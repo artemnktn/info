@@ -33,6 +33,8 @@ export interface Theme {
   cdnCaching: boolean
   colors: Colors
   fontOrigin: "googleFonts" | "local"
+  /** When using local webfonts, preload paths (e.g. `static/fonts/Body.woff2`) so the first paint uses the real font instead of fallback (reduces FOUT). */
+  localFontPreload?: string | string[]
 }
 
 export type ThemeKey = keyof Colors

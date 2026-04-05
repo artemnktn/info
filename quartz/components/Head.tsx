@@ -5,6 +5,15 @@ import { googleFontHref, googleFontSubsetHref } from "../util/theme"
 import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
 import { unescapeHTML } from "../util/escape"
 import { CustomOgImagesEmitterName } from "../plugins/emitters/ogImage"
+
+function fontPreloadMimeType(assetPath: string): string {
+  const lower = assetPath.toLowerCase()
+  if (lower.endsWith(".woff2")) return "font/woff2"
+  if (lower.endsWith(".woff")) return "font/woff"
+  if (lower.endsWith(".otf")) return "font/otf"
+  return "font/woff2"
+}
+
 export default (() => {
   const Head: QuartzComponent = ({
     cfg,
@@ -58,6 +67,26 @@ export default (() => {
               rel="stylesheet"
               href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,600;1,400&display=swap"
             />
+          </>
+        )}
+        {cfg.theme.fontOrigin === "local" && cfg.theme.localFontPreload && (
+          <>
+            {(Array.isArray(cfg.theme.localFontPreload)
+              ? cfg.theme.localFontPreload
+              : [cfg.theme.localFontPreload]
+            ).map((relPath) => {
+              const href = joinSegments(baseDir, relPath.replace(/^\//, ""))
+              return (
+                <link
+                  key={href}
+                  rel="preload"
+                  href={href}
+                  as="font"
+                  type={fontPreloadMimeType(relPath)}
+                  crossOrigin="anonymous"
+                />
+              )
+            })}
           </>
         )}
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
