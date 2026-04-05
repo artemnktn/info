@@ -30,7 +30,7 @@ export const defaultContentPageLayout: PageLayout = {
     Component.PageTitle(),
     Component.MobileOnly(Component.Spacer()),
     Component.Flex({
-      gap: "0.35rem",
+      gap: "0.25rem",
       components: [
         {
           Component: Component.Search(),
@@ -57,7 +57,7 @@ beforeBody: [Component.Breadcrumbs(), Component.ArticleTitle() /*, Component.Con
     Component.PageTitle(),
     Component.MobileOnly(Component.Spacer()),
     Component.Flex({
-      gap: "0.35rem",
+      gap: "0.25rem",
       components: [
         {
           Component: Component.Search(),
