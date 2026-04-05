@@ -30,6 +30,7 @@ export const defaultContentPageLayout: PageLayout = {
     Component.PageTitle(),
     Component.MobileOnly(Component.Spacer()),
     Component.Flex({
+      gap: "0.35rem",
       components: [
         {
           Component: Component.Search(),
@@ -39,14 +40,12 @@ export const defaultContentPageLayout: PageLayout = {
         { Component: Component.ReaderMode() },
       ],
     }),
-    Component.DesktopOnly(Component.SidebarFooterSpacer()),
     Component.DesktopOnly(Component.Contact()),
   ],
   right: [
     Component.Graph(),
     Component.DesktopOnly(Component.TableOfContents()),
     Component.Backlinks(),
-    Component.DesktopOnly(Component.SidebarFooterSpacer()),
     Component.DesktopOnly(Component.HongKongTime()),
   ],
 }
@@ -58,6 +57,7 @@ beforeBody: [Component.Breadcrumbs(), Component.ArticleTitle() /*, Component.Con
     Component.PageTitle(),
     Component.MobileOnly(Component.Spacer()),
     Component.Flex({
+      gap: "0.35rem",
       components: [
         {
           Component: Component.Search(),
@@ -66,11 +66,9 @@ beforeBody: [Component.Breadcrumbs(), Component.ArticleTitle() /*, Component.Con
         { Component: Component.Darkmode() },
       ],
     }),
-    Component.DesktopOnly(Component.SidebarFooterSpacer()),
     Component.DesktopOnly(Component.Contact()),
   ],
   right: [
-    Component.DesktopOnly(Component.SidebarFooterSpacer()),
     Component.DesktopOnly(Component.HongKongTime()),
   ],
 }

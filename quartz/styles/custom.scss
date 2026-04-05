@@ -1,77 +1,35 @@
 @use "./base.scss";
 @use "./variables.scss" as *;
 
-/* Acumin Pro — licensed .otf files in quartz/static/fonts/ */
+/* Unica77 LL — .woff2 in static/fonts/ (see fonts/README.md). Only Regular provided: heavier weights / italic use browser synthesis. Roboto Mono: Head.tsx when fontOrigin is local. */
 @font-face {
-  font-family: "Acumin Pro";
-  src: url("/static/fonts/Acumin-RPro.otf") format("opentype");
+  font-family: "Unica77 LL";
+  src: url("/static/fonts/Unica77LL-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
-@font-face {
-  font-family: "Acumin Pro";
-  src: url("/static/fonts/Acumin-ItPro.otf") format("opentype");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-
-/* No separate semibold file — map 600 to bold */
-@font-face {
-  font-family: "Acumin Pro";
-  src: url("/static/fonts/Acumin-BdPro.otf") format("opentype");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Acumin Pro";
-  src: url("/static/fonts/Acumin-BdPro.otf") format("opentype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Acumin Pro";
-  src: url("/static/fonts/Acumin-BdItPro.otf") format("opentype");
-  font-weight: 700;
-  font-style: italic;
-  font-display: swap;
-}
-
-/* Headings: normal weight (400), not bold */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-weight: 400 !important;
-}
-
+/* Page title (Artem Nikitin) — medium */
 .page-title,
 .page-title a,
 .page-title a:hover {
-  font-weight: 400 !important;
+  font-weight: 500 !important;
 }
-/* Light theme: black page title */
+/* Светлая тема: чёрный */
 :root:not([saved-theme="dark"]) .page-title,
 :root:not([saved-theme="dark"]) .page-title a,
 :root:not([saved-theme="dark"]) .page-title a:hover {
   color: #000000 !important;
 }
-/* Dark theme: white page title */
+/* Тёмная тема: белый */
 :root[saved-theme="dark"] .page-title,
 :root[saved-theme="dark"] .page-title a,
 :root[saved-theme="dark"] .page-title a:hover {
   color: #ffffff !important;
 }
 
-/* Text selection: lime #C8FF00 */
+/* Выделение текста: салатовый #C8FF00 */
 ::selection {
   background: #C8FF00 !important;
   color: #000000 !important;
@@ -82,138 +40,32 @@ h6 {
   color: #000000 !important;
 }
 
-/* Body/headings: Acumin Pro (see @font-face above). Code: system mono stack via --codeFont */
-
+/* Базовый размер текста 16px; высота поля поиска = кнопки темы/reader */
 :root {
   font-size: 16px !important;
+  --header-control-height: 2rem;
+  /* Quartz default .search max-width is 14rem — wider sidebar search */
+  --search-max-width: 22rem;
 }
 
-/* Vertical rules between columns only (no horizontal rules or outer page frame) */
-.page > #quartz-body .sidebar.left {
-  @media all and not ($mobile) {
-    border-right: 1px solid var(--secondary);
-    padding-right: 4rem;
-  }
-}
-
-.page > #quartz-body div.sidebar.right {
-  box-sizing: border-box;
-  min-width: 0;
-  max-width: 100%;
-
-  /* Same horizontal padding as div.center so Graph View lines up with article text */
-  @media all and ($tablet) {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-
-  @media all and ($mobile) {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-
-  @media all and ($desktop) {
-    border-left: 1px solid var(--secondary);
-    padding-left: 2rem;
-    padding-right: 2rem;
-    width: 100%;
-  }
-
-  /*
-   * Below desktop, the default theme uses flex-direction: row and flex: 1 on all children,
-   * so the graph and HK time sit on one row and the clock jumps to the top.
-   * Keep a column: graph on top, vertical spacer, HK time at the bottom.
-   */
-  @media all and not ($desktop) {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    align-content: flex-start;
-    gap: 1.2rem;
-
-    & > * {
-      flex: 0 1 auto !important;
-      max-height: none !important;
-    }
-
-    & > .sidebar-footer-spacer {
-      flex: 1 1 auto !important;
-      min-height: 0;
-      width: 100%;
-    }
-
-    & .graph > .graph-outer {
-      max-height: 24rem;
-    }
-  }
-}
-
-/* Graph View: stay within column bounds like the center column */
-.page > #quartz-body div.sidebar.right .graph {
-  box-sizing: border-box;
-  min-width: 0;
-  max-width: 100%;
-  width: 100%;
-}
-
-.page > #quartz-body div.sidebar.right .graph > h3 {
-  max-width: 100%;
-}
-
-.page > #quartz-body div.sidebar.right .graph > .graph-outer {
-  box-sizing: border-box;
-  max-width: 100%;
-  width: 100%;
-}
-
-.page > #quartz-body div.sidebar.right .graph .graph-container {
-  box-sizing: border-box;
-  max-width: 100%;
-}
-
-/* Center column: padding + no overflow past vertical rules (grid min-width: 0) */
-.page > #quartz-body div.center {
-  box-sizing: border-box;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  width: 100%;
-
-  @media all and not ($mobile) {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-
-  @media all and ($desktop) {
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
-}
-
-.page > #quartz-body div.center .page-header,
-.page > #quartz-body div.center article,
-.page > #quartz-body div.center .page-footer {
-  box-sizing: border-box;
-  min-width: 0;
-  max-width: 100%;
-}
-
-/* Sidebar: revised date + HK time — white in dark theme */
+/* Sidebar: revised и HK — белые (в тёмной теме) */
 :root[saved-theme="dark"] .contact-sidebar,
 :root[saved-theme="dark"] .hongkong-time-wrapper,
 :root[saved-theme="dark"] .hongkong-time-wrapper .hongkong-time {
   color: #ffffff !important;
 }
 
-/* Dark theme: soft white gradient at bottom */
+/* Тёмная тема: мягкий белый градиент снизу */
 :root[saved-theme="dark"] body {
   background: linear-gradient(to bottom, var(--light) 0%, var(--light) 70%, rgba(255, 255, 255, 0.25) 100%) !important;
 }
 
-/* Links: normal weight, not bold */
+/* ссылки — обычная насыщенность, не жирные */
 a {
   font-weight: 400 !important;
 }
 
-/* Link color slightly lighter */
+/* цвет ссылок чуть светлее */
 a {
   color: color-mix(in srgb, var(--secondary) 75%, var(--darkgray)) !important;
 }
@@ -221,7 +73,7 @@ a:hover {
   color: var(--tertiary) !important;
 }
 
-/* Tags: thin outline; gray by default, white on hover (like links) */
+/* теги: тонкая обводка (как линии), серые по умолчанию, фиолетовые при наведении — как ссылки */
 
 a.internal.tag-link,
 .tags a.internal.tag-link {
@@ -248,13 +100,13 @@ a.internal.tag-link:hover,
   }
 }
 
-/* Search: selection — white background, black text (readable on results) */
+/* Поиск: выделение текста — белый фон, чёрный текст (инверсия для читаемости) */
 .search ::selection {
   background: #ffffff !important;
   color: #000000 !important;
 }
 
-/* Search: hover/focus on result cards — white background, black text */
+/* Поиск: при ховере/фокусе — белый фон, чёрный текст (светлая и тёмная темы) */
 .search .result-card:hover,
 .search .result-card:focus,
 .search .result-card.focus {
@@ -274,12 +126,49 @@ a.internal.tag-link:hover,
   }
 }
 
-/* Remove layout <hr> between article and page footer (markdown --- inside article unchanged) */
-.page > #quartz-body div.center > hr {
-  display: none;
+/* Поиск: длиннее поле (переопределяет max-width: 14rem из search.scss) */
+.search {
+  max-width: min(100%, var(--search-max-width, 22rem)) !important;
 }
 
-/* Horizontal rules — gray (--secondary; --lightgray is purple in this theme) */
+/* Поиск + квадраты темы/reader: одна внешняя высота (рамка SVG = высоте строки поиска) */
+.search > .search-button {
+  box-sizing: border-box;
+  height: var(--header-control-height);
+  min-height: var(--header-control-height);
+}
+
+.page > #quartz-body .sidebar.left .flex-component {
+  align-items: stretch;
+}
+
+.page > #quartz-body .sidebar.left .flex-component > div {
+  align-self: stretch !important;
+  display: flex;
+  align-items: center;
+  min-height: var(--header-control-height);
+}
+
+html:where(:root) button.darkmode,
+html:where(:root) button.readermode {
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+  background: transparent !important;
+  box-sizing: border-box !important;
+  width: var(--header-control-height) !important;
+  height: var(--header-control-height) !important;
+  min-width: var(--header-control-height);
+  min-height: var(--header-control-height);
+}
+
+html:where(:root) button.darkmode > svg.theme-toggle-icon,
+html:where(:root) button.readermode > svg.reader-mode-icon {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* горизонтальные разделительные линии — серые (--secondary, т.к. --lightgray у тебя фиолетовый) */
 hr {
   background-color: var(--secondary) !important;
 }
@@ -296,14 +185,14 @@ tr {
   border-bottom-color: var(--secondary) !important;
 }
 
-/* Tighter line height for compact body text */
+/* уменьшаем межстрочное расстояние для более компактного текста */
 p,
 li,
 tbody {
   line-height: 1.4rem !important;
 }
 
-/* Hide Explorer toggle; folder tree always expanded */
+/* убираем кнопку-переключатель Explorer, структура папок всегда видна */
 .explorer .title-button,
 .explorer .desktop-explorer {
   display: none !important;
@@ -320,7 +209,7 @@ tbody {
   margin-top: 0 !important;
 }
 
-/* Properties panel values — gray (override inherited color) */
+/* значения в properties — серые (переопределяем наследование) */
 .popover-hint .content-properties,
 .popover-hint .content-properties *,
 .content-properties,
@@ -328,7 +217,7 @@ tbody {
   color: var(--secondary) !important;
 }
 
-/* Content preview modal (graph + internal links) */
+/* Content modal (граф + везде) — всегда загружаем для ссылок */
 .graph-content-preview {
   position: fixed;
   z-index: 9999;
@@ -509,7 +398,7 @@ tbody {
   }
 }
 
-/* No border-radius; neutralize purple accent vars */
+/* Без скруглений, без фиолетового */
 :root {
   --textHighlight: #C8FF0088 !important;
   --color-purple: #ffffff !important;

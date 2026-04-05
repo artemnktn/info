@@ -26,7 +26,6 @@ import Flex from "./Flex"
 import ConditionalRender from "./ConditionalRender"
 import Contact from "./Contact"
 import HongKongTime from "./HongKongTime"
-import SidebarFooterSpacer from "./SidebarFooterSpacer"
 
 
 export {
@@ -58,5 +57,4 @@ export {
   ConditionalRender,
   Contact,
   HongKongTime,
-  SidebarFooterSpacer,
 }

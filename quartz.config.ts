@@ -17,15 +17,14 @@ const config: QuartzConfig = {
     },
     locale: "en-US",
     baseUrl: "artemnikitin.info",
-    ignorePatterns: ["private", "templates", ".obsidian", "Page_Templates"],
+    ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "modified",
     theme: {
       fontOrigin: "local",
       cdnCaching: true,
       typography: {
-        header: "Acumin Pro",
-        body: "Acumin Pro",
-        /* Monospace stack; Roboto Mono is not loaded — browser uses system mono fallbacks */
+        header: "Unica77 LL",
+        body: "Unica77 LL",
         code: "Roboto Mono",
       },
       colors: {

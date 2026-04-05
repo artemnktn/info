@@ -1,10 +1,19 @@
-# Font files (Acumin Pro)
+# Fonts
 
-Place your licensed Acumin Pro **OpenType** files here with these exact names (used by `quartz/styles/custom.scss`):
+## Unica77 LL (body & headings)
 
-- `Acumin-RPro.otf` — regular (400)
-- `Acumin-ItPro.otf` — italic (400)
-- `Acumin-BdPro.otf` — bold (600 and 700; no separate semibold)
-- `Acumin-BdItPro.otf` — bold italic (700)
+From [Lineto](https://www.lineto.com/). The CSS family name in the files is **`Unica77 LL`**.
 
-The site falls back to system fonts if any file is missing.
+Current file:
+
+- `Unica77LL-Regular.woff2` — Regular (400)
+
+If you add more **`.woff2`** cuts (Medium, Bold, Italic, …), add matching `@font-face` blocks in `quartz/styles/custom.scss` and map weights (page title uses **500** via `.page-title`).
+
+## Roboto Mono (code)
+
+Loaded from **Google Fonts** via `<link>` in `Head.tsx` when `fontOrigin` is `local` and `cdnCaching` is true.
+
+## Other files
+
+`favorit-font-family/` and Acumin `.otf` files are unused by the site CSS unless you wire them in `custom.scss`.

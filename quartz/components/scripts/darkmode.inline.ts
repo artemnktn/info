@@ -1,4 +1,4 @@
-// Default to dark on first visit; then use theme from localStorage
+// тёмная тема по умолчанию при открытии; сохранённый выбор — из localStorage
 const currentTheme = localStorage.getItem("theme") ?? "dark"
 document.documentElement.setAttribute("saved-theme", currentTheme)
 

@@ -13,8 +13,8 @@ const HongKongTime: QuartzComponent = ({ displayClass }: QuartzComponentProps) =
 
 HongKongTime.css = `
 .hongkong-time-wrapper {
-  flex-shrink: 0;
-  padding-top: 0;
+  margin-top: auto;
+  padding-top: 1rem;
   font-size: 0.85rem;
   color: var(--secondary);
   text-align: right;

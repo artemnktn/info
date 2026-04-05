@@ -18,8 +18,8 @@ const Contact: QuartzComponent = ({ displayClass }: QuartzComponentProps) => {
 
 Contact.css = `
 .contact-sidebar {
-  flex-shrink: 0;
-  padding-top: 0;
+  margin-top: auto;
+  padding-top: 1rem;
   font-size: 0.85rem;
   color: var(--secondary);
 }
