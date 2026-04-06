@@ -18,6 +18,6 @@ Working across critical urban theories and spatial data science, my research foc
 
 This is my digital garden (mostly making some of my Obsidian public) where I collect ongoing and past projects, writings, notes, code snippets and occasionally skating videos.
 
-[[bio]]
-[[mugshot]]
+- [[bio]]
+- [[mugshot]]
 

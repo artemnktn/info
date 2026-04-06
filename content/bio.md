@@ -1,6 +1,6 @@
 ---
 title: about me
-draft: true
+draft: false
 tags:
 ---
 short bio (50 words):
