@@ -2,7 +2,7 @@
   display: none;
 }
 
-/* Обычный курсор (стрелка) с белой обводкой */
+/* Arrow cursor with white stroke */
 $cursor-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-width='2' d='M5 3l14 9h-7l-3 9z'/%3E%3C/svg%3E");
 
 body.custom-cursor-active,

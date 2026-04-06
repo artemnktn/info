@@ -16,7 +16,7 @@ document.addEventListener("nav", () => {
     cursor.style.top = e.clientY + "px"
   }
 
-  // capture: true — получаем mousemove даже при перетаскивании графа (D3 drag)
+  // Keep mousemove during graph drag.
   window.addEventListener("mousemove", move, true)
   window.addCleanup(() => {
     window.removeEventListener("mousemove", move, true)

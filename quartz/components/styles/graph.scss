@@ -125,7 +125,7 @@
       border: none;
       cursor: pointer;
       font-size: 1.25rem;
-      color: var(--secondary);
+      color: #ffffff;
       padding: 0.25rem;
       display: flex;
       align-items: center;
@@ -181,8 +181,8 @@
         &::after {
           right: 4px;
           bottom: 4px;
-          border-right: 2px solid var(--gray);
-          border-bottom: 2px solid var(--gray);
+          border-right: 2px solid #ffffff;
+          border-bottom: 2px solid #ffffff;
         }
       }
       &.graph-window-resize-sw {
@@ -192,8 +192,8 @@
         &::after {
           left: 4px;
           bottom: 4px;
-          border-left: 2px solid var(--gray);
-          border-bottom: 2px solid var(--gray);
+          border-left: 2px solid #ffffff;
+          border-bottom: 2px solid #ffffff;
         }
       }
       &.graph-window-resize-ne {
@@ -203,8 +203,8 @@
         &::after {
           right: 4px;
           top: 4px;
-          border-right: 2px solid var(--gray);
-          border-top: 2px solid var(--gray);
+          border-right: 2px solid #ffffff;
+          border-top: 2px solid #ffffff;
         }
       }
       &.graph-window-resize-nw {
@@ -214,8 +214,8 @@
         &::after {
           left: 4px;
           top: 4px;
-          border-left: 2px solid var(--gray);
-          border-top: 2px solid var(--gray);
+          border-left: 2px solid #ffffff;
+          border-top: 2px solid #ffffff;
         }
       }
     }

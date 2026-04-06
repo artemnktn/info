@@ -91,28 +91,39 @@ a {
     color: var(--tertiary);
   }
 
+  &.external {
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+  }
+
+  /* [[wiki links]]: no underline, no fill. #tags (.tag-link): styled in custom.scss */
   &.internal {
-    text-decoration: none;
-    background-color: var(--highlight);
-    padding: 0 0.1rem;
-    border-radius: 0;
     line-height: 1.4rem;
 
-    &.broken {
-      color: var(--secondary);
-      opacity: 0.5;
-      transition: opacity 0.2s ease;
-      &:hover {
-        opacity: 0.8;
+    &:not(.tag-link) {
+      text-decoration: none;
+      background-color: transparent;
+      padding: 0;
+      border-radius: 0;
+
+      &.broken {
+        color: var(--secondary);
+        opacity: 0.5;
+        transition: opacity 0.2s ease;
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+
+      &:has(> img) {
+        background-color: transparent;
+        border-radius: 0;
+        padding: 0;
       }
     }
 
-    &:has(> img) {
-      background-color: transparent;
-      border-radius: 0;
-      padding: 0;
-    }
     &.tag-link {
+      text-decoration: none;
       &::before {
         content: "#";
       }

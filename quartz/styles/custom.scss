@@ -9,20 +9,20 @@
 .page-title a:hover {
   font-weight: 400 !important;
 }
-/* Светлая тема: чёрный */
+/* Light: black title */
 :root:not([saved-theme="dark"]) .page-title,
 :root:not([saved-theme="dark"]) .page-title a,
 :root:not([saved-theme="dark"]) .page-title a:hover {
   color: #000000 !important;
 }
-/* Тёмная тема: белый */
+/* Dark: white title */
 :root[saved-theme="dark"] .page-title,
 :root[saved-theme="dark"] .page-title a,
 :root[saved-theme="dark"] .page-title a:hover {
   color: #ffffff !important;
 }
 
-/* Выделение текста: салатовый #C8FF00 */
+/* Selection: lime */
 ::selection {
   background: #C8FF00 !important;
   color: #000000 !important;
@@ -33,32 +33,32 @@
   color: #000000 !important;
 }
 
-/* Базовый размер текста 16px; высота поля поиска = кнопки темы/reader */
+/* Base size + control height */
 :root {
   font-size: 16px !important;
   --header-control-height: 2rem;
-  /* Quartz default .search max-width is 14rem — wider sidebar search */
+  /* Wider search field */
   --search-max-width: 22rem;
 }
 
-/* Sidebar: revised и HK — белые (в тёмной теме) */
+/* Dark: white sidebar meta */
 :root[saved-theme="dark"] .contact-sidebar,
 :root[saved-theme="dark"] .hongkong-time-wrapper,
 :root[saved-theme="dark"] .hongkong-time-wrapper .hongkong-time {
   color: #ffffff !important;
 }
 
-/* Тёмная тема: мягкий белый градиент снизу */
+/* Dark: soft bottom gradient */
 :root[saved-theme="dark"] body {
   background: linear-gradient(to bottom, var(--light) 0%, var(--light) 70%, rgba(255, 255, 255, 0.25) 100%) !important;
 }
 
-/* ссылки — обычная насыщенность, не жирные */
+/* Links: normal weight */
 a {
   font-weight: 400 !important;
 }
 
-/* цвет ссылок чуть светлее */
+/* Slightly lighter links */
 a {
   color: color-mix(in srgb, var(--secondary) 75%, var(--darkgray)) !important;
 }
@@ -66,7 +66,12 @@ a:hover {
   color: var(--tertiary) !important;
 }
 
-/* теги: тонкая обводка (как линии), серые по умолчанию, фиолетовые при наведении — как ссылки */
+/* Light: black link hover */
+:root:not([saved-theme="dark"]) a:hover {
+  color: #000000 !important;
+}
+
+/* Tag pills: outlined */
 
 a.internal.tag-link,
 .tags a.internal.tag-link {
@@ -87,19 +92,25 @@ a.internal.tag-link:hover,
   border-color: #ffffff;
 }
 
+:root:not([saved-theme="dark"]) a.internal.tag-link:hover,
+:root:not([saved-theme="dark"]) .tags a.internal.tag-link:hover {
+  color: #000000 !important;
+  border-color: #000000 !important;
+}
+
 @media all and ($mobile) {
   .tags {
     row-gap: 1.2rem !important;
   }
 }
 
-/* Поиск: выделение текста — белый фон, чёрный текст (инверсия для читаемости) */
+/* Search selection contrast */
 .search ::selection {
   background: #ffffff !important;
   color: #000000 !important;
 }
 
-/* Поиск: при ховере/фокусе — белый фон, чёрный текст (светлая и тёмная темы) */
+/* Search hover/focus contrast */
 .search .result-card:hover,
 .search .result-card:focus,
 .search .result-card.focus {
@@ -119,12 +130,12 @@ a.internal.tag-link:hover,
   }
 }
 
-/* Поиск: длиннее поле (переопределяет max-width: 14rem из search.scss) */
+/* Wider search input */
 .search {
   max-width: min(100%, var(--search-max-width, 22rem)) !important;
 }
 
-/* Поиск + квадраты темы/reader: одна внешняя высота (рамка SVG = высоте строки поиска) */
+/* Match control heights */
 .search > .search-button {
   box-sizing: border-box;
   height: var(--header-control-height);
@@ -161,7 +172,7 @@ html:where(:root) button.readermode > svg.reader-mode-icon {
   height: 100% !important;
 }
 
-/* горизонтальные разделительные линии — серые (--secondary, т.к. --lightgray у тебя фиолетовый) */
+/* Gray separators */
 hr {
   background-color: var(--secondary) !important;
 }
@@ -178,14 +189,14 @@ tr {
   border-bottom-color: var(--secondary) !important;
 }
 
-/* уменьшаем межстрочное расстояние для более компактного текста */
+/* Tighter line height */
 p,
 li,
 tbody {
   line-height: 1.4rem !important;
 }
 
-/* убираем кнопку-переключатель Explorer, структура папок всегда видна */
+/* Always show explorer tree */
 .explorer .title-button,
 .explorer .desktop-explorer {
   display: none !important;
@@ -202,7 +213,7 @@ tbody {
   margin-top: 0 !important;
 }
 
-/* значения в properties — серые (переопределяем наследование) */
+/* Gray property values */
 .popover-hint .content-properties,
 .popover-hint .content-properties *,
 .content-properties,
@@ -210,7 +221,7 @@ tbody {
   color: var(--secondary) !important;
 }
 
-/* Content modal (граф + везде) — всегда загружаем для ссылок */
+/* Content modal styles */
 .graph-content-preview {
   position: fixed;
   z-index: 9999;
@@ -298,7 +309,7 @@ tbody {
     border: none;
     cursor: pointer;
     font-size: 1.25rem;
-    color: var(--secondary);
+    color: #ffffff;
     padding: 0.25rem;
     display: flex;
     align-items: center;
@@ -308,7 +319,7 @@ tbody {
     transition: color 0.2s ease;
 
     &:hover {
-      color: #ffffff;
+      color: var(--tertiary);
     }
   }
 
@@ -351,8 +362,8 @@ tbody {
       &::after {
         right: 4px;
         bottom: 4px;
-        border-right: 2px solid var(--gray);
-        border-bottom: 2px solid var(--gray);
+        border-right: 2px solid #ffffff;
+        border-bottom: 2px solid #ffffff;
       }
     }
     &.graph-window-resize-sw {
@@ -362,8 +373,8 @@ tbody {
       &::after {
         left: 4px;
         bottom: 4px;
-        border-left: 2px solid var(--gray);
-        border-bottom: 2px solid var(--gray);
+        border-left: 2px solid #ffffff;
+        border-bottom: 2px solid #ffffff;
       }
     }
     &.graph-window-resize-ne {
@@ -373,8 +384,8 @@ tbody {
       &::after {
         right: 4px;
         top: 4px;
-        border-right: 2px solid var(--gray);
-        border-top: 2px solid var(--gray);
+        border-right: 2px solid #ffffff;
+        border-top: 2px solid #ffffff;
       }
     }
     &.graph-window-resize-nw {
@@ -384,14 +395,84 @@ tbody {
       &::after {
         left: 4px;
         top: 4px;
-        border-left: 2px solid var(--gray);
-        border-top: 2px solid var(--gray);
+        border-left: 2px solid #ffffff;
+        border-top: 2px solid #ffffff;
       }
     }
   }
 }
 
-/* Без скруглений, без фиолетового */
+/* Light: black modal controls */
+:root:not([saved-theme="dark"]) .graph-content-preview {
+  .graph-content-open-link:hover {
+    color: #000000 !important;
+  }
+
+  .graph-content-close {
+    color: #000000;
+
+    &:hover {
+      color: #000000 !important;
+    }
+  }
+
+  .graph-content-inner .graph-window-resize-handle {
+    &.graph-window-resize-se::after {
+      border-right-color: #000000;
+      border-bottom-color: #000000;
+    }
+    &.graph-window-resize-sw::after {
+      border-left-color: #000000;
+      border-bottom-color: #000000;
+    }
+    &.graph-window-resize-ne::after {
+      border-right-color: #000000;
+      border-top-color: #000000;
+    }
+    &.graph-window-resize-nw::after {
+      border-left-color: #000000;
+      border-top-color: #000000;
+    }
+  }
+}
+
+/* Light: black graph controls */
+:root:not([saved-theme="dark"]) .graph > .global-graph-outer .global-graph-wrapper {
+  .global-graph-close {
+    color: #000000;
+
+    &:hover {
+      color: #000000 !important;
+    }
+  }
+
+  .graph-window-resize-handle {
+    &.graph-window-resize-se::after {
+      border-right-color: #000000;
+      border-bottom-color: #000000;
+    }
+    &.graph-window-resize-sw::after {
+      border-left-color: #000000;
+      border-bottom-color: #000000;
+    }
+    &.graph-window-resize-ne::after {
+      border-right-color: #000000;
+      border-top-color: #000000;
+    }
+    &.graph-window-resize-nw::after {
+      border-left-color: #000000;
+      border-top-color: #000000;
+    }
+  }
+}
+
+/* Light: black filter hover */
+:root:not([saved-theme="dark"]) .graph .global-graph-wrapper .graph-filters .graph-filter-pill:hover {
+  color: #000000 !important;
+  border-color: #000000 !important;
+}
+
+/* No rounded corners */
 :root {
   --textHighlight: #C8FF0088 !important;
   --color-purple: #ffffff !important;
