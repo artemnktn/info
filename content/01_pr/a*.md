@@ -1,5 +1,5 @@
 ---
-title: a* (stupid city)
+title: a* (глупый город)
 draft: false
 tags:
   - urban

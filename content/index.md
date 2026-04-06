@@ -19,6 +19,12 @@ Working across critical urban theories and spatial data science, my research foc
 This is my digital garden (mostly sharing some of my Obsidian notes) where I collect ongoing and past projects, writings, notes, code snippets and occasionally skating videos.
 
 
->  [[bio]]
->  
->  [[mugshot]]
+---
+
+→ Email:  hello@artemnikitin.info 
+
+→ LinkedIn: [ar-nikitin](https://www.linkedin.com/in/ar-nikitin/)
+
+→ Formal bio:  [[bio]] 
+
+→ Photo: [[mugshot]]
