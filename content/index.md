@@ -14,7 +14,7 @@ I am an urban researcher and designer, with background in architecture.
 
 Currently based in Hong Kong, doing a PhD at PolyU's School of Design. Before this, I worked as a lead urban planner with Novaya Labs, and as a research fellow at the ACP Lab (Geography, HUJI). 
 
-Working across critical urban theories and spatial data science, my research focuses on housing affordability, property rights, and urban morphology in Hong Kong’s high-density, vertical context. Alongside that, I'm drawn to counter-cartography and other mapping practices, using GIS and computational urban analysis, including geospatial modelling and visualisation.
+Working across critical urban theories and spatial data science, my research focuses on housing affordability, property rights, and urban morphology in Hong Kong’s high-density, vertical context. Alongside that, I'm drawn to counter-cartography and other mapping practices, using GIS, geospatial modelling and visualisation.
 
 This is my digital garden (mostly sharing some of my Obsidian notes) where I collect ongoing and past projects, writings, notes, maps and occasionally skating videos.
 
