@@ -1,11 +1,10 @@
 ---
-title: a101
+title: The Occupation of the Sun
 draft: false
 tags:
-  - design
   - urban
-  - morphology
-  - policy
+  - critical
+  - mapping
 date: "2021"
 project: true
 Location:

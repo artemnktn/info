@@ -5,6 +5,7 @@ tags:
   - urban
   - gis
   - design
+  - policy
 date: "2025"
 project: true
 Location: Derbent, Moscow, Ulan-Ude
