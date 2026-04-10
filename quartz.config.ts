@@ -20,11 +20,12 @@ const config: QuartzConfig = {
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "modified",
     theme: {
-      fontOrigin: "googleFonts",
+      fontOrigin: "local",
       cdnCaching: true,
       typography: {
-        header: "DM Sans",
-        body: "DM Sans",
+        /* Default local setup: Roboto-like system stack + Roboto Mono for code. */
+        header: "Roboto",
+        body: "Roboto",
         code: "Roboto Mono",
       },
       colors: {
@@ -89,7 +90,7 @@ const config: QuartzConfig = {
       Plugin.Static(),
       Plugin.Favicon(),
       Plugin.NotFoundPage(),
-      // Comment out CustomOgImages to speed up build time (requires fonts; disable when using local Acumin Pro)
+      // Comment out CustomOgImages to speed up build time (requires fonts)
       // Plugin.CustomOgImages(),
     ],
   },
