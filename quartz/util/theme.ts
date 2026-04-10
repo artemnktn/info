@@ -87,18 +87,25 @@ function formatFontSpecification(
   return spec.name
 }
 
+/** Google Fonts CSS2 URLs use + for spaces in family names (e.g. DM Sans). */
+function googleFontFamilyParam(spec: string): string {
+  const colon = spec.indexOf(":")
+  if (colon === -1) return spec.replace(/ /g, "+")
+  return spec.slice(0, colon).replace(/ /g, "+") + spec.slice(colon)
+}
+
 export function googleFontHref(theme: Theme) {
   const { header, body, code } = theme.typography
-  const headerFont = formatFontSpecification("header", header)
-  const bodyFont = formatFontSpecification("body", body)
-  const codeFont = formatFontSpecification("code", code)
+  const headerFont = googleFontFamilyParam(formatFontSpecification("header", header))
+  const bodyFont = googleFontFamilyParam(formatFontSpecification("body", body))
+  const codeFont = googleFontFamilyParam(formatFontSpecification("code", code))
 
   return `https://fonts.googleapis.com/css2?family=${headerFont}&family=${bodyFont}&family=${codeFont}&display=swap`
 }
 
 export function googleFontSubsetHref(theme: Theme, text: string) {
   const title = theme.typography.title || theme.typography.header
-  const titleFont = formatFontSpecification("title", title)
+  const titleFont = googleFontFamilyParam(formatFontSpecification("title", title))
 
   return `https://fonts.googleapis.com/css2?family=${titleFont}&text=${encodeURIComponent(text)}&display=swap`
 }

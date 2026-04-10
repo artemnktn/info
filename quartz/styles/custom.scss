@@ -1,7 +1,7 @@
 @use "./base.scss";
 @use "./variables.scss" as *;
 
-/* Body/header: stack from quartz.config + theme.ts. Roboto Mono: Head.tsx when fontOrigin is local. */
+/* Fonts: DM Sans + Roboto Mono via theme (googleFonts). */
 
 /* Page title (Artem Nikitin) — regular */
 .page-title,

@@ -20,12 +20,11 @@ const config: QuartzConfig = {
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "modified",
     theme: {
-      fontOrigin: "local",
+      fontOrigin: "googleFonts",
       cdnCaching: true,
       typography: {
-        /* No bundled body font: uses system UI fonts; "Roboto" matches stack + OG image generation (Google). */
-        header: "Roboto",
-        body: "Roboto",
+        header: "DM Sans",
+        body: "DM Sans",
         code: "Roboto Mono",
       },
       colors: {
