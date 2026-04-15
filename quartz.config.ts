@@ -23,10 +23,9 @@ const config: QuartzConfig = {
       fontOrigin: "local",
       cdnCaching: true,
       typography: {
-        /* Default local setup: Roboto-like system stack + Roboto Mono for code. */
-        header: "Roboto",
-        body: "Roboto",
-        code: "Roboto Mono",
+        header: "PPNeueGstaad-Regular",
+        body: "PPNeueGstaad-Regular",
+        code: "PPNeueGstaad-Regular",
       },
       colors: {
         lightMode: {
