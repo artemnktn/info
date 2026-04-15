@@ -3,8 +3,8 @@
 
 /* Local site font */
 @font-face {
-  font-family: "PPNeueGstaad-Regular";
-  src: url("/static/fonts/PPNeueGstaad-Regular.otf") format("opentype");
+  font-family: "PPNeueGstaad-CompactRegular";
+  src: url("/static/fonts/PPNeueGstaad-CompactRegular.otf") format("opentype");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -42,10 +42,10 @@
 
 /* Base size + control height */
 :root {
-  --bodyFont: "PPNeueGstaad-Regular", sans-serif;
-  --headerFont: "PPNeueGstaad-Regular", sans-serif;
-  --titleFont: "PPNeueGstaad-Regular", sans-serif;
-  --codeFont: "PPNeueGstaad-Regular", monospace;
+  --bodyFont: "PPNeueGstaad-CompactRegular", sans-serif;
+  --headerFont: "PPNeueGstaad-CompactRegular", sans-serif;
+  --titleFont: "PPNeueGstaad-CompactRegular", sans-serif;
+  --codeFont: "PPNeueGstaad-CompactRegular", monospace;
   font-size: 16px !important;
   --header-control-height: 2rem;
   /* Wider search field */
