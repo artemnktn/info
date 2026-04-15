@@ -3,8 +3,8 @@
 
 /* Local site font */
 @font-face {
-  font-family: "PPNeueGstaad-CompactRegular";
-  src: url("/static/fonts/PPNeueGstaad-CompactRegular.otf") format("opentype");
+  font-family: "PPNeueMontreal-Book";
+  src: url("/static/fonts/PPNeueMontreal-Book.otf") format("opentype");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -42,10 +42,10 @@
 
 /* Base size + control height */
 :root {
-  --bodyFont: "PPNeueGstaad-CompactRegular", sans-serif;
-  --headerFont: "PPNeueGstaad-CompactRegular", sans-serif;
-  --titleFont: "PPNeueGstaad-CompactRegular", sans-serif;
-  --codeFont: "PPNeueGstaad-CompactRegular", monospace;
+  --bodyFont: "PPNeueMontreal-Book", sans-serif;
+  --headerFont: "PPNeueMontreal-Book", sans-serif;
+  --titleFont: "PPNeueMontreal-Book", sans-serif;
+  --codeFont: "PPNeueMontreal-Book", monospace;
   font-size: 16px !important;
   --header-control-height: 2rem;
   /* Wider search field */

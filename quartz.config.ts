@@ -23,9 +23,9 @@ const config: QuartzConfig = {
       fontOrigin: "local",
       cdnCaching: true,
       typography: {
-        header: "PPNeueGstaad-CompactRegular",
-        body: "PPNeueGstaad-CompactRegular",
-        code: "PPNeueGstaad-CompactRegular",
+        header: "PPNeueMontreal-Book",
+        body: "PPNeueMontreal-Book",
+        code: "PPNeueMontreal-Book",
       },
       colors: {
         lightMode: {
