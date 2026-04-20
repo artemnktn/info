@@ -22,6 +22,8 @@ const config: QuartzConfig = {
     theme: {
       fontOrigin: "local",
       cdnCaching: true,
+      /** Must live under `quartz/static/` so the build copies it to `/static/fonts/...`. */
+      localFontPreload: "static/fonts/PPRadioGrotesk-Regular.otf",
       typography: {
         header: "PPRadioGrotesk-Regular",
         body: "PPRadioGrotesk-Regular",
