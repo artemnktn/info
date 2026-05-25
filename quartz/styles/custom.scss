@@ -48,20 +48,73 @@
   --codeFont: "PPRadioGrotesk-Regular", monospace;
   font-size: 16px !important;
   --header-control-height: 2rem;
+  --layout-top: #{$topSpacing};
   /* Wider search field */
   --search-max-width: 22rem;
 }
 
-/* Dark: white sidebar meta */
-:root[saved-theme="dark"] .contact-sidebar,
-:root[saved-theme="dark"] .hongkong-time-wrapper,
-:root[saved-theme="dark"] .hongkong-time-wrapper .hongkong-time {
-  color: #ffffff !important;
+/* Desktop: align page title, first paragraph, and graph label on one row */
+@media all and ($desktop) {
+  .page > #quartz-body .page-header:has(.popover-hint:empty) {
+    display: none;
+  }
+
+  .page > #quartz-body .page-header {
+    margin-top: 0;
+  }
+
+  .page > #quartz-body .page-header:not(:has(.popover-hint:empty)) {
+    margin-top: var(--layout-top);
+  }
+
+  .page > #quartz-body .center > article {
+    margin-top: var(--layout-top);
+  }
+
+  .page > #quartz-body .page-header:not(:has(.popover-hint:empty)) + article {
+    margin-top: 0;
+  }
+
+  .page > #quartz-body .center > article > p:first-child {
+    margin-top: 0;
+  }
+
+  .page > #quartz-body .page-title,
+  .page > #quartz-body .graph > h3,
+  .page > #quartz-body .center > article > p:first-child {
+    margin-bottom: 0;
+  }
+
+  .page > #quartz-body .page-title {
+    margin-top: 0;
+    line-height: 1.2;
+  }
+
+  .page > #quartz-body .graph > h3 {
+    margin-top: 0;
+    line-height: 1.4rem;
+  }
 }
 
-/* Dark: soft bottom gradient */
-:root[saved-theme="dark"] body {
-  background: linear-gradient(to bottom, var(--light) 0%, var(--light) 70%, rgba(255, 255, 255, 0.25) 100%) !important;
+@media all and ($mobile) {
+  .page > #quartz-body .sidebar.left {
+    padding-top: 2.5rem;
+  }
+}
+
+/* Sidebar meta: dark gray */
+.contact-sidebar,
+.contact-sidebar *,
+.hongkong-time-wrapper,
+.hongkong-time-wrapper .hongkong-time {
+  color: #333333 !important;
+}
+
+:root[saved-theme="dark"] .contact-sidebar,
+:root[saved-theme="dark"] .contact-sidebar *,
+:root[saved-theme="dark"] .hongkong-time-wrapper,
+:root[saved-theme="dark"] .hongkong-time-wrapper .hongkong-time {
+  color: #5A5A5A !important;
 }
 
 /* Links: normal weight */
@@ -183,13 +236,22 @@ html:where(:root) button.readermode > svg.reader-mode-icon {
   height: 100% !important;
 }
 
-/* Gray separators */
+/* Horizontal separators */
 hr {
-  background-color: var(--secondary) !important;
+  border: none !important;
+  background-color: #000000 !important;
+}
+
+:root[saved-theme="dark"] hr {
+  background-color: #ffffff !important;
 }
 
 .footnotes {
-  border-top-color: var(--secondary) !important;
+  border-top-color: #000000 !important;
+}
+
+:root[saved-theme="dark"] .footnotes {
+  border-top-color: #ffffff !important;
 }
 
 th {

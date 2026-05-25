@@ -32,10 +32,7 @@ export const defaultContentPageLayout: PageLayout = {
     Component.Flex({
       gap: "0.25rem",
       components: [
-        {
-          Component: Component.Search(),
-          grow: true,
-        },
+        { Component: Component.Search() },
         { Component: Component.Darkmode() },
         { Component: Component.ReaderMode() },
       ],
@@ -59,10 +56,7 @@ beforeBody: [Component.Breadcrumbs(), Component.ArticleTitle() /*, Component.Con
     Component.Flex({
       gap: "0.25rem",
       components: [
-        {
-          Component: Component.Search(),
-          grow: true,
-        },
+        { Component: Component.Search() },
         { Component: Component.Darkmode() },
       ],
     }),

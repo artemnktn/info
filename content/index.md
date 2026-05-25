@@ -2,12 +2,6 @@
 title: Artem Nikitin
 draft: false
 tags:
-  - research
-  - mapping
-  - design
-  - policy
-  - morphology
-  - geospatial
 ---
 I am an urban researcher and designer, with background in architecture. 
 
@@ -20,10 +14,10 @@ This is my digital garden (mostly sharing some of my Obsidian notes) where I col
 
 ---
 
-→ Email:  hello@artemnikitin.info 
+→ email:  hello@artemnikitin.info 
 
-→ LinkedIn: [ar-nikitin](https://www.linkedin.com/in/ar-nikitin/)
+→ linkedIn: [ar-nikitin](https://www.linkedin.com/in/ar-nikitin/)
 
-→ Formal bio:  [[bio]] 
+→ formal bio:  [[bio]] 
 
-→ Photo: [[mugshot]]
+→ photo: [[mugshot]]
