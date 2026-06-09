@@ -1,20 +1,20 @@
 @use "./base.scss";
 @use "./variables.scss" as *;
 
-/* Local site font */
+/* Local site font — PP Neue Montreal (500; Regular file, no Medium cut in PP_font) */
 @font-face {
-  font-family: "PPRadioGrotesk-Regular";
-  src: url("/static/fonts/PPRadioGrotesk-Regular.otf") format("opentype");
+  font-family: "PP Neue Montreal";
+  src: url("/static/fonts/PPNeueMontreal-Regular.otf") format("opentype");
   font-style: normal;
-  font-weight: 400;
+  font-weight: 500;
   font-display: swap;
 }
 
-/* Page title (Artem Nikitin) — regular */
+/* Page title (Artem Nikitin) */
 .page-title,
 .page-title a,
 .page-title a:hover {
-  font-weight: 400 !important;
+  font-weight: 500 !important;
 }
 /* Light: black title */
 :root:not([saved-theme="dark"]) .page-title,
@@ -42,10 +42,11 @@
 
 /* Base size + control height */
 :root {
-  --bodyFont: "PPRadioGrotesk-Regular", sans-serif;
-  --headerFont: "PPRadioGrotesk-Regular", sans-serif;
-  --titleFont: "PPRadioGrotesk-Regular", sans-serif;
-  --codeFont: "PPRadioGrotesk-Regular", monospace;
+  --bodyFont: "PP Neue Montreal", sans-serif;
+  --headerFont: "PP Neue Montreal", sans-serif;
+  --titleFont: "PP Neue Montreal", sans-serif;
+  --codeFont: "PP Neue Montreal", monospace;
+  font-weight: 500;
   font-size: 16px !important;
   --header-control-height: 2rem;
   --layout-top: #{$topSpacing};
@@ -117,9 +118,9 @@
   color: #5A5A5A !important;
 }
 
-/* Links: normal weight */
+/* Links */
 a {
-  font-weight: 400 !important;
+  font-weight: 500 !important;
 }
 
 /* Slightly lighter links */
@@ -144,7 +145,7 @@ a.internal.tag-link,
   border: 1px solid var(--secondary);
   border-radius: 0;
   padding: 4px 6px;
-  font-weight: 400;
+  font-weight: 500;
   text-decoration: none !important;
   transition: color 0.2s ease, border-color 0.2s ease;
 }
