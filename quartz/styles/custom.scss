@@ -1,20 +1,12 @@
 @use "./base.scss";
 @use "./variables.scss" as *;
 
-/* Local site font — PP Neue Montreal (500; Regular file, no Medium cut in PP_font) */
-@font-face {
-  font-family: "PP Neue Montreal";
-  src: url("/static/fonts/PPNeueMontreal-Regular.otf") format("opentype");
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-}
-
+/* Google Font — Inter */
 /* Page title (Artem Nikitin) */
 .page-title,
 .page-title a,
 .page-title a:hover {
-  font-weight: 500 !important;
+  font-weight: 450 !important;
 }
 /* Light: black title */
 :root:not([saved-theme="dark"]) .page-title,
@@ -42,12 +34,12 @@
 
 /* Base size + control height */
 :root {
-  --bodyFont: "PP Neue Montreal", sans-serif;
-  --headerFont: "PP Neue Montreal", sans-serif;
-  --titleFont: "PP Neue Montreal", sans-serif;
-  --codeFont: "PP Neue Montreal", monospace;
-  font-weight: 500;
-  font-size: 16px !important;
+  --bodyFont: Inter, sans-serif;
+  --headerFont: Inter, sans-serif;
+  --titleFont: Inter, sans-serif;
+  --codeFont: Inter, sans-serif;
+  font-weight: 450;
+  font-size: 15px !important;
   --header-control-height: 2rem;
   --layout-top: #{$topSpacing};
   /* Wider search field */
@@ -120,7 +112,7 @@
 
 /* Links */
 a {
-  font-weight: 500 !important;
+  font-weight: 450 !important;
 }
 
 /* Slightly lighter links */
@@ -145,7 +137,7 @@ a.internal.tag-link,
   border: 1px solid var(--secondary);
   border-radius: 0;
   padding: 4px 6px;
-  font-weight: 500;
+  font-weight: 450;
   text-decoration: none !important;
   transition: color 0.2s ease, border-color 0.2s ease;
 }
