@@ -3,7 +3,7 @@ title: Artem Nikitin
 draft: false
 tags:
 ---
-I am an urban researcher and designer, with background in architecture. 
+I am an urban researcher and designer with a background in architecture.
 
 Currently based in Hong Kong, doing a PhD at PolyU's School of Design. Before, I worked as a lead urban planner with Novaya Labs, and as a research fellow at the ACP Lab (Geography, HUJI). 
 
