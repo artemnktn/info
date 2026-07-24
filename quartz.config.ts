@@ -20,12 +20,16 @@ const config: QuartzConfig = {
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "modified",
     theme: {
-      fontOrigin: "googleFonts",
+      fontOrigin: "local",
       cdnCaching: true,
+      localFontPreload: [
+        "static/fonts/PPNeueMontreal-Regular.otf",
+        "static/fonts/PPNeueMontreal-Semibold.otf",
+      ],
       typography: {
-        header: { name: "Inter", weights: [400, 450, 500, 700] },
-        body: { name: "Inter", weights: [400, 450, 500, 600], includeItalic: true },
-        code: { name: "Inter", weights: [400, 450, 500] },
+        header: "Neue Montreal",
+        body: "Neue Montreal",
+        code: "Neue Montreal",
       },
       colors: {
         lightMode: {
