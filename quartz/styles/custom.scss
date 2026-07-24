@@ -18,15 +18,17 @@
   font-display: swap;
 }
 
-/* Page title (Artem Nikitin) — match body text style */
+/* Page title (Artem Nikitin) — same size as body text everywhere */
 .page-title,
 .page-title a {
   font-family: "Neue Montreal", sans-serif !important;
   font-weight: 400 !important;
-  font-size: 18px !important;
-  line-height: 23px !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
   white-space: nowrap;
   color: color-mix(in srgb, var(--secondary) 75%, var(--darkgray)) !important;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .page-title a:hover {
@@ -46,18 +48,26 @@ article h1,
   line-height: 60px !important;
 }
 
-@media all and ($mobile) {
-  .page-title,
-  .page-title a,
-  .page-title a:hover {
-    font-size: 18px !important;
-    line-height: 23px !important;
-  }
+/* Markdown ## headings */
+article h2,
+.popover-hint h2 {
+  font-family: "Neue Montreal", sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 35px !important;
+  line-height: 35px !important;
+}
 
+@media all and ($mobile) {
   article h1,
   .popover-hint h1 {
     font-size: 36px !important;
     line-height: 36px !important;
+  }
+
+  article h2,
+  .popover-hint h2 {
+    font-size: 28px !important;
+    line-height: 28px !important;
   }
 }
 
@@ -126,7 +136,7 @@ article h1,
 
   .page > #quartz-body .page-title {
     margin-top: 0;
-    line-height: 23px;
+    line-height: inherit;
   }
 
   .page > #quartz-body .graph > h3 {
