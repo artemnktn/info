@@ -6,7 +6,7 @@ tags:
   - critical
   - mapping
 date: "2021"
-project: true
+hide: true
 Location:
 My role:
 Team:

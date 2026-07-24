@@ -6,7 +6,7 @@ tags:
   - gis
   - design
 date: "2025"
-project: true
+hide: true
 Location: Derbent, Moscow, Ulan-Ude
 My role: Product Lead
 Team: NOVAYAlabs

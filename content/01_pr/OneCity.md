@@ -2,26 +2,26 @@
 title: OneCity
 draft: false
 tags:
-  - urban
   - gis
   - design
   - policy
 date: 2021-present
-project: true
 Location: Johannesburg, South Africa
 My role: Project Lead, Urban Strategist
 Team: NOVAYAlabs, SARChi (University of the Witwatersrand)
 link:
   - https://onecity.dev/
 cssclasses:
-  - note
   - project
+hide: true
 ---
-## OneCity 
+## WebGIS for data-driven site analysis and transparent urban development
 
-OneCity is a web-based GIS platform for analysing land plots in relation to official spatial strategies. It brings together planning, regulatory, and spatial datasets in a single interactive map interface to support development and investment decisions.
+OneCity is a web-based GIS platform for analysing land plots in relation to official spatial strategies. It brings together planning, regulatory, and spatial datasets in a single interactive map interface to support development and investment decisions. 
 
-At NOVAYA Labs, I worked as a Project Manager on the design and coordination of this platform. My work includes early concept development, prototyping and wireframing, user research, and the preparation of product narratives and use-case scenarios. Explore more on [OneCity](https://onecity.dev/)
+At NOVAYA Labs, I worked as a Project Manager on the design and coordination of this platform. As part of a small team working with SARChI at the University of the Witwatersrand, I contributed to early concept development, prototyping and wireframing, user research, and the development of product narratives and use-case scenarios. 
+
+The project started in 2019 in Johannesburg. We explored how municipal and other urban data across South Africa are shared and used by the private sector. As a response to urban sprawl, fragmented data sources, and administrative silos, we built a WebGIS platform that brings together data from more than 50 sources, making up-to-date information on city development available in one place. OneCity helps users identify properties that are not affected by major planning constraints, such as flood risk. It also provides detailed site-level information, including whether environmental assessments or other studies are required before construction.
 
 ![[03.jpg]]
 *Fig. 01 OneCity platform combining planning regulations, spatial indicators, and market data for comparative site analysis.
@@ -29,7 +29,7 @@ At NOVAYA Labs, I worked as a Project Manager on the design and coordination of 
 ---
 ## OneCity Insights
 
-In april 2023, we released [OneCity Insights](https://onecity.dev/insights), an analytical layer built on top of the OneCity platform. Insights was built to make it easier to see which land is both legally usable and practically viable, without weeks of paperwork and spreadsheets.
+In april 2023, we released a major update [OneCity Insights](https://onecity.dev/insights), an analytical layer built on top of the OneCity platform. Insights was built to make it easier to see which land is both legally usable and practically viable. We integrated Lens search tool, a feature that highlights development opportunities within a 600-metre radius of a selected area.
 
 > We identified 181 753 opportunities in Johannesburg to develop or extend single-family detached houses that fit the present property market climate. 2 452, which is 1.5% of these opportunities, have high development potential and are close to amenities and public transport. 
 

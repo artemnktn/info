@@ -172,9 +172,9 @@ function createRouter() {
         return
       }
 
-      // Project links: open graph with highlight, no content modal
+      // Hidden pages: open graph with highlight, no content modal
       const anchor = getOpts(event) && (event.target as Element)?.closest?.("a")
-      if (anchor && "project" in anchor.dataset) {
+      if (anchor && ("hide" in anchor.dataset || "project" in anchor.dataset)) {
         const slug = pathSlug as FullSlug
         document.dispatchEvent(
           new CustomEvent("graph-highlight", { detail: { slug } }) as CustomEventMap["graph-highlight"],

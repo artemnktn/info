@@ -5,7 +5,7 @@ tags:
   - design
   - critical
 date: "2025"
-project: true
+hide: true
 Location:
 My role:
 Team:

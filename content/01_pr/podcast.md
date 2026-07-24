@@ -7,7 +7,7 @@ tags:
   - policy
   - critical
 date: "2025"
-project: true
+hide: true
 Location:
 My role:
 Team:

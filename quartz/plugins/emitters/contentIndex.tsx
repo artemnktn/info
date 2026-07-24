@@ -16,7 +16,8 @@ export type ContentDetails = {
   links: SimpleSlug[]
   tags: string[]
   cssclasses?: string[]
-  project?: boolean
+  /** When true, page is hidden from search and graph content modal. */
+  hide?: boolean
   content: string
   richContent?: string
   date?: Date
@@ -112,10 +113,12 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
             links: file.data.links ?? [],
             tags: file.data.frontmatter?.tags ?? [],
             cssclasses: file.data.frontmatter?.cssclasses ?? [],
-            project:
+            hide:
+              file.data.frontmatter?.hide === true ||
+              file.data.frontmatter?.hide === "true" ||
+              // legacy alias while notes migrate from `project`
               file.data.frontmatter?.project === true ||
-              file.data.frontmatter?.project === "true" ||
-              (file.data.frontmatter?.cssclasses ?? []).includes("project"),
+              file.data.frontmatter?.project === "true",
             content: file.data.text ?? "",
             richContent: opts?.rssFullHtml
               ? escapeHTML(toHtml(tree as Root, { allowDangerousHtml: true }))

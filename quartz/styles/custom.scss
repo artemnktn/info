@@ -89,8 +89,8 @@ article h2,
   --titleFont: "Neue Montreal", sans-serif;
   --codeFont: "Neue Montreal", sans-serif;
   font-weight: 400;
-  font-size: 18px !important;
-  line-height: 23px;
+  font-size: 16px !important;
+  line-height: 21px;
   --header-control-height: 2rem;
   --layout-top: #{$topSpacing};
   /* Wider search field */
@@ -311,11 +311,11 @@ tr {
   border-bottom-color: var(--secondary) !important;
 }
 
-/* Body line height — match 18/23 */
+/* Body line height */
 p,
 li,
 tbody {
-  line-height: 23px !important;
+  line-height: 21px !important;
 }
 
 /* Always show explorer tree */

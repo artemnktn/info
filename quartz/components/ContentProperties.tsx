@@ -19,6 +19,8 @@ const SKIP_KEYS = new Set([
   "enableToc",
   "cssclasses",
   "comments",
+  "hide",
+  "project",
 ])
 
 function formatKey(key: string): string {

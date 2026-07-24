@@ -491,7 +491,7 @@ async function setupSearch(searchElement: Element, currentSlug: FullSlug, data: 
     ])
     const finalResults = [...allIds]
       .map((id) => formatForDisplay(currentSearchTerm, id))
-      .filter((item) => !data[item.slug]?.project)
+      .filter((item) => !data[item.slug]?.hide)
     await displayResults(finalResults)
   }
 

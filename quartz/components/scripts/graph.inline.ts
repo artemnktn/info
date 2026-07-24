@@ -33,7 +33,7 @@ type NodeData = {
   text: string
   tags: string[]
   cssclasses: string[]
-  project?: boolean
+  hide?: boolean
 } & SimulationNodeDatum
 
 type SimpleLinkData = {
@@ -232,7 +232,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       text,
       tags: cd?.tags ?? [],
       cssclasses: cd?.cssclasses ?? [],
-      project: cd?.project ?? (cd?.cssclasses ?? []).includes("project"),
+      hide: cd?.hide === true,
     }
   })
 
@@ -582,7 +582,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
           if (Date.now() - dragStartTime < 500) {
             const node = graphData.nodes.find((n) => n.id === event.subject.id) as NodeData
             const isTag = node.id.startsWith("tags/")
-            if (!node.project && !isTag) {
+            if (!node.hide && !isTag) {
               const targ = resolveRelative(fullSlug, node.id)
               showContentModal(new URL(targ, window.location.toString()))
             }
@@ -593,7 +593,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     for (const node of nodeRenderData) {
       node.gfx.on("click", () => {
         const isTag = node.simulationData.id.startsWith("tags/")
-        if (!node.simulationData.project && !isTag) {
+        if (!node.simulationData.hide && !isTag) {
           const targ = resolveRelative(fullSlug, node.simulationData.id)
           showContentModal(new URL(targ, window.location.toString()))
         }
