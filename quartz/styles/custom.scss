@@ -303,6 +303,11 @@ hr {
   background-color: #ffffff !important;
 }
 
+/* No footer separator on the homepage */
+body[data-slug="index"] #quartz-body > .center > hr {
+  display: none;
+}
+
 .footnotes {
   border-top-color: #000000 !important;
 }
