@@ -1,15 +1,28 @@
 @use "../../styles/variables.scss" as *;
 
 .graph {
-  .global-graph-wrapper .graph-filters {
+  .global-graph-wrapper .graph-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--lightgray);
+    flex-shrink: 0;
+  }
+
+  .global-graph-wrapper .graph-filters,
+  .global-graph-wrapper .graph-view-toggle {
     display: flex;
     flex-wrap: wrap;
     gap: 0.35rem;
-    padding: 0.5rem 1rem;
-    border-bottom: 1px solid var(--lightgray);
+    padding: 0;
+    border-bottom: none;
   }
 
-  .global-graph-wrapper .graph-filters .graph-filter-pill {
+  .global-graph-wrapper .graph-filters .graph-filter-pill,
+  .global-graph-wrapper .graph-view-toggle .graph-filter-pill {
     font-family: inherit;
     font-size: 0.75rem;
     padding: 0.2rem 0.5rem;
@@ -21,15 +34,84 @@
     transition: color 0.2s ease, border-color 0.2s ease;
   }
 
-  .global-graph-wrapper .graph-filters .graph-filter-pill:hover {
+  .global-graph-wrapper .graph-filters .graph-filter-pill:hover,
+  .global-graph-wrapper .graph-view-toggle .graph-filter-pill:hover {
     color: var(--tertiary);
     border-color: var(--tertiary);
   }
 
-  .global-graph-wrapper .graph-filters .graph-filter-pill.active {
+  .global-graph-wrapper .graph-filters .graph-filter-pill.active,
+  .global-graph-wrapper .graph-view-toggle .graph-filter-pill.active {
     background: transparent;
     border-color: var(--tertiary);
     color: var(--tertiary);
+  }
+
+  .global-graph-wrapper .graph-index-list {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 0.75rem 1rem 1.25rem;
+  }
+
+  .global-graph-wrapper .graph-index-empty {
+    margin: 0;
+    color: var(--gray);
+  }
+
+  .global-graph-wrapper .graph-index-ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .global-graph-wrapper .graph-index-li {
+    margin: 0;
+  }
+
+  .global-graph-wrapper .graph-index-item {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 0.35rem 0;
+    font: inherit;
+    font-size: 18px;
+    line-height: 23px;
+    font-weight: 400;
+    color: color-mix(in srgb, var(--secondary) 75%, var(--darkgray));
+    cursor: pointer;
+  }
+
+  .global-graph-wrapper .graph-index-title {
+    min-width: 0;
+  }
+
+  .global-graph-wrapper .graph-index-date {
+    flex-shrink: 0;
+    color: var(--gray);
+    opacity: 0.85;
+  }
+
+  .global-graph-wrapper .graph-index-item:hover {
+    color: var(--tertiary);
+  }
+
+  .global-graph-wrapper .graph-index-item-muted {
+    color: var(--gray);
+    cursor: default;
+  }
+
+  .global-graph-wrapper .graph-index-item-muted:hover {
+    color: var(--gray);
+  }
+
+  .global-graph-wrapper .graph-index-item-muted .graph-index-date {
+    color: var(--gray);
   }
 
   & > h3 {

@@ -6,7 +6,6 @@ const SKIP_KEYS = new Set([
   "title",
   "tags",
   "draft",
-  "date",
   "created",
   "modified",
   "published",
@@ -28,6 +27,22 @@ function formatKey(key: string): string {
     .replace(/([A-Z])/g, " $1")
     .replace(/^./, (s) => s.toUpperCase())
     .trim()
+}
+
+function formatValue(value: unknown): string {
+  if (typeof value === "boolean") return value ? "Yes" : "No"
+  if (value instanceof Date) return value.toLocaleDateString()
+  return String(value)
+}
+
+function renderValue(value: unknown) {
+  const text = formatValue(value)
+  if (!/^https?:\/\//.test(text)) return text
+  return (
+    <a href={text} class="external" target="_blank" rel="noopener noreferrer">
+      {text}
+    </a>
+  )
 }
 
 export default (() => {
@@ -53,14 +68,13 @@ export default (() => {
               <dt class="property-key">{formatKey(key)}</dt>
               <dd class="property-value">
                 {Array.isArray(value)
-                  ? value.join(", ")
-                  : typeof value === "boolean"
-                    ? value
-                      ? "Yes"
-                      : "No"
-                    : value instanceof Date
-                      ? value.toLocaleDateString()
-                      : String(value)}
+                  ? value.map((item, i) => (
+                      <>
+                        {i > 0 ? ", " : null}
+                        {renderValue(item)}
+                      </>
+                    ))
+                  : renderValue(value)}
               </dd>
             </>
           ))}

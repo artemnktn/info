@@ -8,14 +8,12 @@ tags:
   - mapping
 date: "2025"
 hide: true
-Location: Derbent, Moscow, Ulan-Ude
-My role: Product Lead
-Team: NOVAYAlabs
+Location: Tel Aviv
+My role: Research fellow
+Team: Talia Kaufmann, Artem Nikitin, Michael Drogochinsky
 link:
-  - https://novaya.co.uk/urbandesigncodes
+  - https://algocitylab.com/
 cssclasses:
-  - note
-  - writing
 ---
 ++++++++++ work in progresssss
 

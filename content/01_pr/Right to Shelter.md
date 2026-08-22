@@ -8,10 +8,13 @@ tags:
 date: "2025"
 hide: true
 Location: Negev/Naqab
-My role: Design Strategist, Researcher
+My role: Researcher, Designer
 Team: ACP lab
 link:
   - https://www.nurlab.org/projects/the-right-to-shelter
+cssclasses:
+  - writing
+  - project
 ---
 ## Shelter Analysis of Bedouin Informal Settlements in the Negev/Naqab
 

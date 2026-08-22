@@ -57,16 +57,180 @@ type NodeRenderData = GraphicsInfo & {
 
 const localStorageKey = "graph-visited"
 const cssclassFilterKey = "graph-cssclass-filter"
+type GraphViewMode = "graph" | "index"
+
 function getVisited(): Set<SimpleSlug> {
   return new Set(JSON.parse(localStorage.getItem(localStorageKey) ?? "[]"))
 }
 
-let cssclassFilter: string | null = localStorage.getItem(cssclassFilterKey)
+let cssclassFilter: string | null = localStorage.getItem(cssclassFilterKey) || null
+let viewMode: GraphViewMode = "graph"
 
 function addToVisited(slug: SimpleSlug) {
   const visited = getVisited()
   visited.add(slug)
   localStorage.setItem(localStorageKey, JSON.stringify([...visited]))
+}
+
+function applyGlobalViewMode(wrapper: HTMLElement | null, mode: GraphViewMode) {
+  if (!wrapper) return
+  wrapper.classList.toggle("view-index", mode === "index")
+  wrapper.classList.toggle("view-graph", mode === "graph")
+  const graphContainer = wrapper.querySelector(".global-graph-container") as HTMLElement | null
+  const indexList = wrapper.querySelector(".graph-index-list") as HTMLElement | null
+  if (graphContainer) {
+    graphContainer.hidden = mode === "index"
+  }
+  if (indexList) {
+    indexList.hidden = mode === "graph"
+  }
+}
+
+function formatIndexDate(raw: Date | string | undefined): string | null {
+  if (!raw) return null
+  const d = raw instanceof Date ? raw : new Date(raw)
+  if (Number.isNaN(d.getTime())) return null
+  return d.getFullYear().toString()
+}
+
+function populateIndexList(
+  indexList: HTMLElement,
+  data: Map<SimpleSlug, ContentDetails>,
+  fullSlug: FullSlug,
+) {
+  indexList.innerHTML = ""
+  const entries = [...data.entries()]
+    .filter(([id, details]) => {
+      if (id.startsWith("tags/")) return false
+      if (cssclassFilter && !(details.cssclasses ?? []).includes(cssclassFilter)) return false
+      return true
+    })
+    .sort((a, b) => {
+      const da = a[1].date ? new Date(a[1].date as Date | string).getTime() : NaN
+      const db = b[1].date ? new Date(b[1].date as Date | string).getTime() : NaN
+      const aValid = !Number.isNaN(da)
+      const bValid = !Number.isNaN(db)
+      if (aValid && bValid && da !== db) return db - da
+      if (aValid && !bValid) return -1
+      if (!aValid && bValid) return 1
+      return a[1].title.localeCompare(b[1].title, undefined, { sensitivity: "base" })
+    })
+
+  if (entries.length === 0) {
+    const empty = document.createElement("p")
+    empty.className = "graph-index-empty"
+    empty.textContent = "No pages"
+    indexList.appendChild(empty)
+    return
+  }
+
+  const ul = document.createElement("ul")
+  ul.className = "graph-index-ul"
+  for (const [id, details] of entries) {
+    const li = document.createElement("li")
+    li.className = "graph-index-li"
+    const isHidden = details.hide === true
+    const dateLabel =
+      details.dateRange ?? formatIndexDate(details.date as Date | string | undefined)
+
+    const row = document.createElement(isHidden ? "span" : "button")
+    if (!isHidden) {
+      ;(row as HTMLButtonElement).type = "button"
+    }
+    row.className = "graph-index-item" + (isHidden ? " graph-index-item-muted" : "")
+
+    const titleEl = document.createElement("span")
+    titleEl.className = "graph-index-title"
+    titleEl.textContent = details.title
+    row.appendChild(titleEl)
+
+    if (dateLabel) {
+      const dateEl = document.createElement("span")
+      dateEl.className = "graph-index-date"
+      dateEl.textContent = dateLabel
+      row.appendChild(dateEl)
+    }
+
+    if (!isHidden) {
+      row.addEventListener("click", () => {
+        const targ = resolveRelative(fullSlug, id)
+        showContentModal(new URL(targ, window.location.toString()))
+      })
+    }
+
+    li.appendChild(row)
+    ul.appendChild(li)
+  }
+  indexList.appendChild(ul)
+}
+
+function setupGlobalGraphChrome(
+  graphEl: Element | null,
+  data: Map<SimpleSlug, ContentDetails>,
+  fullSlug: FullSlug,
+) {
+  const wrapper = graphEl?.querySelector(".global-graph-wrapper") as HTMLElement | null
+  const filtersEl = wrapper?.querySelector(".graph-filters") as HTMLElement | null
+  const toggleEl = wrapper?.querySelector(".graph-view-toggle") as HTMLElement | null
+  const indexList = wrapper?.querySelector(".graph-index-list") as HTMLElement | null
+  if (!wrapper || !filtersEl) return
+
+  const allCssclasses = new Set<string>()
+  for (const d of data.values()) {
+    for (const c of d.cssclasses ?? []) {
+      if (c) allCssclasses.add(c)
+    }
+  }
+
+  filtersEl.innerHTML = ""
+  const allBtn = document.createElement("button")
+  allBtn.type = "button"
+  allBtn.className = "graph-filter-pill" + (cssclassFilter === null ? " active" : "")
+  allBtn.textContent = "all"
+  allBtn.addEventListener("click", () => {
+    cssclassFilter = null
+    localStorage.setItem(cssclassFilterKey, "")
+    document.dispatchEvent(new CustomEvent("nav", { detail: { url: getFullSlug(window) } }))
+    document.dispatchEvent(new CustomEvent("graph-refresh"))
+  })
+  filtersEl.appendChild(allBtn)
+
+  if (allCssclasses.size > 0) {
+    for (const c of [...allCssclasses].sort()) {
+      const btn = document.createElement("button")
+      btn.type = "button"
+      btn.className = "graph-filter-pill" + (cssclassFilter === c ? " active" : "")
+      btn.textContent = c
+      btn.addEventListener("click", () => {
+        cssclassFilter = cssclassFilter === c ? null : c
+        localStorage.setItem(cssclassFilterKey, cssclassFilter ?? "")
+        document.dispatchEvent(new CustomEvent("nav", { detail: { url: getFullSlug(window) } }))
+        document.dispatchEvent(new CustomEvent("graph-refresh"))
+      })
+      filtersEl.appendChild(btn)
+    }
+  }
+
+  if (toggleEl) {
+    toggleEl.innerHTML = ""
+    for (const mode of ["graph", "index"] as const) {
+      const btn = document.createElement("button")
+      btn.type = "button"
+      btn.className = "graph-filter-pill" + (viewMode === mode ? " active" : "")
+      btn.textContent = mode
+      btn.addEventListener("click", () => {
+        if (viewMode === mode) return
+        viewMode = mode
+        document.dispatchEvent(new CustomEvent("graph-refresh"))
+      })
+      toggleEl.appendChild(btn)
+    }
+  }
+
+  if (indexList) {
+    populateIndexList(indexList, data, fullSlug)
+  }
+  applyGlobalViewMode(wrapper, viewMode)
 }
 
 type TweenNode = {
@@ -115,44 +279,13 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const pageMatchesCssclassFilter = (slug: SimpleSlug) =>
     !cssclassFilter || (data.get(slug)?.cssclasses ?? []).includes(cssclassFilter)
 
-  // Populate cssclass filters UI (global graph modal only)
+  // Populate cssclass filters + index list (global graph modal only)
   const isGlobalContainer = graph.classList.contains("global-graph-container")
   const graphEl = graph.closest(".graph")
-  const filtersEl = graphEl?.querySelector(".global-graph-wrapper .graph-filters") as HTMLElement | null
-  if (filtersEl && isGlobalContainer) {
-    const allCssclasses = new Set<string>()
-    for (const d of data.values()) {
-      for (const c of d.cssclasses ?? []) {
-        if (c) allCssclasses.add(c)
-      }
-    }
-    filtersEl.innerHTML = ""
-    const allBtn = document.createElement("button")
-    allBtn.type = "button"
-    allBtn.className = "graph-filter-pill" + (cssclassFilter === null ? " active" : "")
-    allBtn.textContent = "all"
-    allBtn.addEventListener("click", () => {
-      cssclassFilter = null
-      localStorage.setItem(cssclassFilterKey, "")
-      document.dispatchEvent(new CustomEvent("nav", { detail: { url: getFullSlug(window) } }))
-      document.dispatchEvent(new CustomEvent("graph-refresh"))
-    })
-    filtersEl.appendChild(allBtn)
-    if (allCssclasses.size > 0) {
-      const sortedClasses = [...allCssclasses].sort()
-      for (const c of sortedClasses) {
-        const btn = document.createElement("button")
-        btn.type = "button"
-        btn.className = "graph-filter-pill" + (cssclassFilter === c ? " active" : "")
-        btn.textContent = c
-        btn.addEventListener("click", () => {
-          cssclassFilter = cssclassFilter === c ? null : c
-          localStorage.setItem(cssclassFilterKey, cssclassFilter ?? "")
-          document.dispatchEvent(new CustomEvent("nav", { detail: { url: getFullSlug(window) } }))
-          document.dispatchEvent(new CustomEvent("graph-refresh"))
-        })
-        filtersEl.appendChild(btn)
-      }
+  if (isGlobalContainer) {
+    setupGlobalGraphChrome(graphEl, data, fullSlug)
+    if (viewMode === "index") {
+      return () => {}
     }
   }
 
@@ -287,12 +420,14 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   // calculate color
   const color = (d: NodeData) => {
     const isCurrent = d.id === slug
+    const isLight = document.documentElement.getAttribute("saved-theme") !== "dark"
     if (isCurrent) {
       return computedStyleMap["--secondary"]
     } else if (d.id.startsWith("tags/")) {
       return computedStyleMap["--secondary"]
     } else if (visited.has(d.id)) {
-      return computedStyleMap["--tertiary"]
+      // tertiary is white in light theme — use dark so visited nodes stay visible
+      return isLight ? computedStyleMap["--dark"] : computedStyleMap["--tertiary"]
     } else {
       return computedStyleMap["--gray"]
     }
@@ -930,6 +1065,7 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
   renderGlobalGraphRef = renderGlobalGraphImpl
 
   function hideGlobalGraph() {
+    viewMode = "graph"
     cleanupGlobalGraphs()
     for (const container of containers) {
       container.classList.remove("active")

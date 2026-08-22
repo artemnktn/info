@@ -1,10 +1,10 @@
 ---
-title: strelka - new normal-
-draft: false
+title: Strelka Institute // The New Normal
+draft: true
 tags:
   - design
-  - critical
-date: "2025"
+  - speculative
+date: "2019"
 hide: true
 Location:
 My role:

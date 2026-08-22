@@ -1,0 +1,103 @@
+.callout[data-callout="carousel"] {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  overflow: visible;
+
+  & > .callout-title {
+    display: none;
+  }
+
+  & > .callout-content {
+    display: block;
+    overflow: visible;
+  }
+
+  .carousel-viewport {
+    width: 100%;
+    overflow: hidden;
+    touch-action: pan-y;
+  }
+
+  .carousel-track {
+    display: flex;
+    transition: transform 300ms ease;
+    will-change: transform;
+  }
+
+  .carousel-slide {
+    flex: 0 0 100%;
+    min-width: 0;
+
+    > a {
+      display: block;
+      background: transparent;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin: 0;
+    }
+  }
+
+  .carousel-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .carousel-arrow,
+  .carousel-dot {
+    border: 0;
+    background: transparent;
+    color: color-mix(in srgb, var(--secondary) 75%, var(--darkgray));
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .carousel-arrow {
+    font: inherit;
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .carousel-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+  }
+
+  .carousel-dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+
+    &.active {
+      background: currentColor;
+    }
+  }
+
+  .carousel-arrow:hover,
+  .carousel-dot:hover {
+    color: var(--tertiary);
+  }
+}
+
+:root:not([saved-theme="dark"]) .callout[data-callout="carousel"] {
+  .carousel-arrow:hover,
+  .carousel-dot:hover {
+    color: #000000;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .callout[data-callout="carousel"] .carousel-track {
+    transition: none;
+  }
+}

@@ -1,6 +1,6 @@
 import { Root } from "hast"
 import { GlobalConfiguration } from "../../cfg"
-import { getDate } from "../../components/Date"
+import { getDate, getDateRange } from "../../components/Date"
 import { escapeHTML } from "../../util/escape"
 import { FilePath, FullSlug, SimpleSlug, joinSegments, simplifySlug } from "../../util/path"
 import { QuartzEmitterPlugin } from "../types"
@@ -21,6 +21,7 @@ export type ContentDetails = {
   content: string
   richContent?: string
   date?: Date
+  dateRange?: string
   description?: string
 }
 
@@ -124,6 +125,7 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
               ? escapeHTML(toHtml(tree as Root, { allowDangerousHtml: true }))
               : undefined,
             date: date,
+            dateRange: getDateRange(file.data),
             description: file.data.description ?? "",
           })
         }
@@ -150,12 +152,15 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
       const fp = joinSegments("static", "contentIndex") as FullSlug
       const simplifiedIndex = Object.fromEntries(
         Array.from(linkIndex).map(([slug, content]) => {
-          // remove description and from content index as nothing downstream
-          // actually uses it. we only keep it in the index as we need it
-          // for the RSS feed
-          delete content.description
-          delete content.date
-          return [slug, content]
+          // Drop description from the client index; keep date as ISO string for graph index view.
+          const { description: _description, date: contentDate, ...rest } = content
+          return [
+            slug,
+            {
+              ...rest,
+              ...(contentDate ? { date: contentDate.toISOString() } : {}),
+            },
+          ]
         }),
       )
 

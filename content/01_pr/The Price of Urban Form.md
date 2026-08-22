@@ -1,5 +1,5 @@
 ---
-title: The Price of Urban Form (MA thesis)
+title: MA thesis // The Price of Urban Form
 draft: false
 tags:
   - design
@@ -9,7 +9,7 @@ tags:
   - gis
   - critical
   - policy
-date: "2021"
+date: "2025"
 hide: true
 Location:
 My role:
@@ -17,7 +17,6 @@ Team:
 link:
 cssclasses:
   - writing
-  - project
 ---
 ++++++++++ work in progresssss
 

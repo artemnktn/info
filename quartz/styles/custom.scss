@@ -55,6 +55,14 @@ article h2,
   font-weight: 600 !important;
   font-size: 35px !important;
   line-height: 35px !important;
+  letter-spacing: 0.02em;
+}
+
+/* Markdown ### headings */
+article h3,
+.popover-hint h3 {
+  font-family: "Neue Montreal", sans-serif !important;
+  font-weight: 600 !important;
 }
 
 @media all and ($mobile) {
@@ -71,15 +79,15 @@ article h2,
   }
 }
 
-/* Selection: lime */
+/* Selection: blue background with green text */
 ::selection {
-  background: #C8FF00 !important;
-  color: #000000 !important;
+  background: #43A9DA !important;
+  color: #00FF3B !important;
 }
 
 :root[saved-theme="dark"] ::selection {
-  background: #C8FF00 !important;
-  color: #000000 !important;
+  background: #43A9DA !important;
+  color: #00FF3B !important;
 }
 
 /* Base size + control height */
@@ -89,8 +97,8 @@ article h2,
   --titleFont: "Neue Montreal", sans-serif;
   --codeFont: "Neue Montreal", sans-serif;
   font-weight: 400;
-  font-size: 16px !important;
-  line-height: 21px;
+  font-size: 18px !important;
+  line-height: 23px;
   --header-control-height: 2rem;
   --layout-top: #{$topSpacing};
   /* Wider search field */
@@ -315,7 +323,23 @@ tr {
 p,
 li,
 tbody {
-  line-height: 21px !important;
+  line-height: 23px !important;
+}
+
+/* Homepage body copy */
+body[data-slug="index"] #quartz-body > .center > article.popover-hint > p {
+  font-family: "Neue Montreal", sans-serif !important;
+  font-size: 32px !important;
+  font-weight: 500 !important;
+  line-height: 38px !important;
+}
+
+.page-title,
+.page-title > a {
+  font-family: "Neue Montreal", sans-serif !important;
+  font-size: 32px !important;
+  font-weight: 500 !important;
+  line-height: 38px !important;
 }
 
 /* Always show explorer tree */
@@ -335,12 +359,12 @@ tbody {
   margin-top: 0 !important;
 }
 
-/* Gray property values */
+/* Gray property values — lighter than --secondary, still dimmer than body text */
 .popover-hint .content-properties,
 .popover-hint .content-properties *,
 .content-properties,
 .content-properties * {
-  color: var(--secondary) !important;
+  color: var(--gray) !important;
 }
 
 /* Content modal styles */
@@ -430,7 +454,7 @@ tbody {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1.25rem;
+    font-size: 1.4rem;
     color: #ffffff;
     padding: 0.25rem;
     display: flex;
@@ -558,6 +582,12 @@ tbody {
   }
 }
 
+/* Larger close buttons in graph / content modals */
+.graph > .global-graph-outer .global-graph-wrapper .global-graph-close,
+.graph-content-preview .graph-content-close {
+  font-size: 1.4rem !important;
+}
+
 /* Light: black graph controls */
 :root:not([saved-theme="dark"]) .graph > .global-graph-outer .global-graph-wrapper {
   .global-graph-close {
@@ -588,15 +618,36 @@ tbody {
   }
 }
 
-/* Light: black filter hover */
-:root:not([saved-theme="dark"]) .graph .global-graph-wrapper .graph-filters .graph-filter-pill:hover {
+/* Light: black filter hover + active */
+:root:not([saved-theme="dark"]) .graph .global-graph-wrapper .graph-filters .graph-filter-pill:hover,
+:root:not([saved-theme="dark"]) .graph .global-graph-wrapper .graph-view-toggle .graph-filter-pill:hover,
+:root:not([saved-theme="dark"]) .graph .global-graph-wrapper .graph-index-item:hover {
   color: #000000 !important;
   border-color: #000000 !important;
 }
 
+:root:not([saved-theme="dark"]) .graph .global-graph-wrapper .graph-filters .graph-filter-pill.active,
+:root:not([saved-theme="dark"]) .graph .global-graph-wrapper .graph-view-toggle .graph-filter-pill.active {
+  color: #000000 !important;
+  border-color: #000000 !important;
+}
+
+:root:not([saved-theme="dark"]) .graph .global-graph-wrapper .graph-index-item:hover {
+  border-color: transparent !important;
+}
+
+/* Graph filters + view toggle: same type as body */
+.graph .global-graph-wrapper .graph-filters .graph-filter-pill,
+.graph .global-graph-wrapper .graph-view-toggle .graph-filter-pill {
+  font-family: var(--bodyFont) !important;
+  font-size: 18px !important;
+  font-weight: 400 !important;
+  line-height: 23px !important;
+}
+
 /* No rounded corners */
 :root {
-  --textHighlight: #C8FF0088 !important;
+  --textHighlight: #43A9DA !important;
   --color-purple: #ffffff !important;
   --color-purple-rgb: 255, 255, 255 !important;
   --sync-avatar-color-7: #ffffff !important;
@@ -629,9 +680,14 @@ tbody {
   --tag-radius: 0 !important;
 }
 
+.text-highlight {
+  color: #00FF3B !important;
+}
+
 .graph > .graph-outer,
 .graph > .global-graph-outer .global-graph-wrapper,
 .graph .global-graph-wrapper .graph-filter-pill,
+.graph .global-graph-wrapper .graph-index-item,
 .graph .global-graph-icon,
 .search .search-button,
 .search .search-space,
@@ -661,3 +717,13 @@ figure[data-rehype-pretty-code-figure] > [data-rehype-pretty-code-title] {
   border-radius: 0 !important;
 }
 
+/* Inline code: high contrast in both themes */
+code:not(pre code) {
+  color: #ffffff !important;
+  background: #000000 !important;
+}
+
+:root[saved-theme="dark"] code:not(pre code) {
+  color: #000000 !important;
+  background: #ffffff !important;
+}

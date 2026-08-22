@@ -1,4 +1,4 @@
-import { Date, getDate } from "./Date"
+import { Date, getDate, getDateRange } from "./Date"
 import { QuartzComponentConstructor, QuartzComponentProps } from "./types"
 import readingTime from "reading-time"
 import { classNames } from "../util/lang"
@@ -30,7 +30,13 @@ export default ((opts?: Partial<ContentMetaOptions>) => {
       const segments: (string | JSX.Element)[] = []
 
       if (fileData.dates) {
-        segments.push(<Date date={getDate(cfg, fileData)!} locale={cfg.locale} />)
+        segments.push(
+          <Date
+            date={getDate(cfg, fileData)!}
+            locale={cfg.locale}
+            range={getDateRange(fileData)}
+          />,
+        )
       }
 
       // Display reading time if enabled

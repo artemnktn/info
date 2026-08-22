@@ -14,8 +14,18 @@ const defaultOptions: Options = {
 
 // YYYY-MM-DD
 const iso8601DateOnlyRegex = /^\d{4}-\d{2}-\d{2}$/
+// YYYY-YYYY (also accepts en/em dashes and spaces)
+const yearRangeRegex = /^(\d{4})\s*[-–—]\s*(\d{4})$/
 
 function coerceDate(fp: string, d: any): Date {
+  if (typeof d === "string") {
+    const range = d.match(yearRangeRegex)
+    if (range) {
+      // Use the end of the final year so descending lists sort ranges by their end date.
+      return new Date(Number(range[2]), 11, 31, 23, 59, 59, 999)
+    }
+  }
+
   // check ISO8601 date-only format
   // we treat this one as local midnight as the normal
   // js date ctor treats YYYY-MM-DD as UTC midnight

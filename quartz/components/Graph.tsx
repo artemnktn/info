@@ -100,8 +100,12 @@ export default ((opts?: Partial<GraphOptions>) => {
             <div class="global-graph-drag-handle">
               <button class="global-graph-close" type="button" aria-label="Close">×</button>
             </div>
-            <div class="graph-filters" aria-label="Filter by css class"></div>
+            <div class="graph-toolbar">
+              <div class="graph-filters" aria-label="Filter by css class"></div>
+              <div class="graph-view-toggle" aria-label="View mode"></div>
+            </div>
             <div class="global-graph-container" data-cfg={JSON.stringify(globalGraph)}></div>
+            <div class="graph-index-list" hidden></div>
             <div class="graph-window-resize-handle graph-window-resize-se" aria-label="Resize"></div>
             <div class="graph-window-resize-handle graph-window-resize-sw" aria-label="Resize"></div>
             <div class="graph-window-resize-handle graph-window-resize-ne" aria-label="Resize"></div>

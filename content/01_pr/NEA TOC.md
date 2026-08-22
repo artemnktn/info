@@ -1,10 +1,10 @@
 ---
-title: Transactions of Care
+title: Non Extractive Architecture // Transactions of Care
 draft: false
 tags:
   - design
-  - critical
-date: "2025"
+  - speculative
+date: "2022"
 hide: true
 Location:
 My role:

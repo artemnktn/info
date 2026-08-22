@@ -1,6 +1,6 @@
 import { FullSlug, isFolderPath, resolveRelative } from "../util/path"
 import { QuartzPluginData } from "../plugins/vfile"
-import { Date, getDate } from "./Date"
+import { Date, getDate, getDateRange } from "./Date"
 import { QuartzComponent, QuartzComponentProps } from "./types"
 import { GlobalConfiguration } from "../cfg"
 
@@ -75,7 +75,13 @@ export const PageList: QuartzComponent = ({ cfg, fileData, allFiles, limit, sort
           <li class="section-li">
             <div class="section">
               <p class="meta">
-                {page.dates && <Date date={getDate(cfg, page)!} locale={cfg.locale} />}
+                {page.dates && (
+                  <Date
+                    date={getDate(cfg, page)!}
+                    locale={cfg.locale}
+                    range={getDateRange(page)}
+                  />
+                )}
               </p>
               <div class="desc">
                 <h3>

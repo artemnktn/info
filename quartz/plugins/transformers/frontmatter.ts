@@ -143,6 +143,7 @@ declare module "vfile" {
         modified: string
         created: string
         published: string
+        date: string
         description: string
         socialDescription: string
         publish: boolean | string

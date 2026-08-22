@@ -5,6 +5,7 @@ import { QuartzPluginData } from "../plugins/vfile"
 interface Props {
   date: Date
   locale?: ValidLocale
+  range?: string
 }
 
 export type ValidDateType = keyof Required<QuartzPluginData>["dates"]
@@ -26,6 +27,13 @@ export function formatDate(d: Date, locale: ValidLocale = "en-US"): string {
   })
 }
 
-export function Date({ date, locale }: Props) {
-  return <time datetime={date.toISOString()}>{formatDate(date, locale)}</time>
+export function getDateRange(data: QuartzPluginData): string | undefined {
+  const raw = data.frontmatter?.date
+  if (typeof raw !== "string") return undefined
+  const match = raw.match(/^(\d{4})\s*[-–—]\s*(\d{4})$/)
+  return match ? `${match[1]}–${match[2]}` : undefined
+}
+
+export function Date({ date, locale, range }: Props) {
+  return <time datetime={date.toISOString()}>{range ?? formatDate(date, locale)}</time>
 }

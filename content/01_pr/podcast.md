@@ -1,21 +1,20 @@
 ---
-title: podcast -впесочнице-
+title: podcast // впесочнице
 draft: false
 tags:
   - urban
   - design
-  - policy
   - critical
-date: "2025"
+date: 2021-2023
 hide: true
 Location:
-My role:
-Team:
+My role: co-host
+Team: Artem Nikitin, Sveta Gorlatova and Alexey Orlov
 link:
 cssclasses:
   - project
   - writing
 ---
-++++++++++ work in progresssss
+
 
 
