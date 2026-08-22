@@ -6,7 +6,7 @@ tags:
   - gis
   - design
   - policy
-date: 2017-2023
+date: 2017-2024
 hide: true
 Location: Derbent, Moscow, Ulan-Ude
 My role: Product Lead

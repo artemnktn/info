@@ -30,7 +30,7 @@ export const defaultContentPageLayout: PageLayout = {
       components: [
         { Component: Component.Search() },
         { Component: Component.Darkmode() },
-        { Component: Component.ReaderMode() },
+        { Component: Component.DesktopOnly(Component.ReaderMode()) },
       ],
     }),
     Component.DesktopOnly(Component.Contact()),
