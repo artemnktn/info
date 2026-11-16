@@ -25,9 +25,31 @@ const Darkmode: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) 
           </clipPath>
         </defs>
         {/* Full viewBox fills the button; stroke inset 0.5 so 1px border is not clipped */}
-        <rect x="0" y="0" width="24" height="24" fill="#000000" clip-path="url(#theme-toggle-clip-ul)" />
-        <rect x="0" y="0" width="24" height="24" fill="#ffffff" clip-path="url(#theme-toggle-clip-br)" />
-        <rect x="0.5" y="0.5" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1" />
+        <rect
+          x="0"
+          y="0"
+          width="24"
+          height="24"
+          fill="#000000"
+          clip-path="url(#theme-toggle-clip-ul)"
+        />
+        <rect
+          x="0"
+          y="0"
+          width="24"
+          height="24"
+          fill="#ffffff"
+          clip-path="url(#theme-toggle-clip-br)"
+        />
+        <rect
+          x="0.5"
+          y="0.5"
+          width="23"
+          height="23"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1"
+        />
       </svg>
     </button>
   )

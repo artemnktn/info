@@ -1,14 +1,15 @@
 ---
-title: IFoU
+title: The 18th International Forum on Urbanism (IFoU)
 date: 2026-10-16
 tags:
-  - news
-draft: true
+  - urban
+  - critical
+draft: false
 hide: true
 Location:
 link:
 cssclasses:
-  - news
+  - conferences
 ---
 
 # {{date:YYYY-MM-DD}}

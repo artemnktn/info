@@ -58,7 +58,14 @@ type Props = {
   showTags?: boolean
 } & QuartzComponentProps
 
-export const PageList: QuartzComponent = ({ cfg, fileData, allFiles, limit, sort, showTags = true }: Props) => {
+export const PageList: QuartzComponent = ({
+  cfg,
+  fileData,
+  allFiles,
+  limit,
+  sort,
+  showTags = true,
+}: Props) => {
   const sorter = sort ?? byDateAndAlphabeticalFolderFirst(cfg)
   let list = allFiles.sort(sorter)
   if (limit) {
@@ -76,11 +83,7 @@ export const PageList: QuartzComponent = ({ cfg, fileData, allFiles, limit, sort
             <div class="section">
               <p class="meta">
                 {page.dates && (
-                  <Date
-                    date={getDate(cfg, page)!}
-                    locale={cfg.locale}
-                    range={getDateRange(page)}
-                  />
+                  <Date date={getDate(cfg, page)!} locale={cfg.locale} range={getDateRange(page)} />
                 )}
               </p>
               <div class="desc">

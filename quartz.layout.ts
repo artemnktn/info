@@ -7,7 +7,7 @@ export const sharedPageComponents: SharedLayout = {
   header: [],
   afterBody: [],
   footer: Component.Footer({
-    links: { },
+    links: {},
   }),
 }
 
@@ -45,20 +45,15 @@ export const defaultContentPageLayout: PageLayout = {
 
 // components for pages that display lists of pages  (e.g. tags or folders)
 export const defaultListPageLayout: PageLayout = {
-beforeBody: [Component.ArticleTitle() /*, Component.ContentMeta()*/],
+  beforeBody: [Component.ArticleTitle() /*, Component.ContentMeta()*/],
   left: [
     Component.PageTitle(),
     Component.MobileOnly(Component.Spacer()),
     Component.Flex({
       gap: "0.25rem",
-      components: [
-        { Component: Component.Search() },
-        { Component: Component.Darkmode() },
-      ],
+      components: [{ Component: Component.Search() }, { Component: Component.Darkmode() }],
     }),
     Component.DesktopOnly(Component.Contact()),
   ],
-  right: [
-    Component.DesktopOnly(Component.HongKongTime()),
-  ],
+  right: [Component.DesktopOnly(Component.HongKongTime())],
 }

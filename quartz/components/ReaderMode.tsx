@@ -16,7 +16,15 @@ const ReaderMode: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps
         aria-hidden="true"
         focusable="false"
       >
-        <rect x="0.5" y="0.5" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1" />
+        <rect
+          x="0.5"
+          y="0.5"
+          width="23"
+          height="23"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1"
+        />
         <text
           x="12"
           y="12"

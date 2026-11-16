@@ -9,3 +9,7 @@ tsconfig.tsbuildinfo
 private/
 .replit
 replit.nix
+
+# Local font originals and editor backups
+PP_font/
+*.save

@@ -6,7 +6,10 @@ import hongkongTimeScript from "./scripts/hongkongTime.inline"
 const HongKongTime: QuartzComponent = ({ displayClass }: QuartzComponentProps) => {
   return (
     <div class={classNames(displayClass, "hongkong-time-wrapper")}>
-      HK time now: <span class="hongkong-time" data-timezone="Asia/Hong_Kong">—</span>
+      HK time now:{" "}
+      <span class="hongkong-time" data-timezone="Asia/Hong_Kong">
+        —
+      </span>
     </div>
   )
 }

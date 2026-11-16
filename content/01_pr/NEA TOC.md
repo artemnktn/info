@@ -2,8 +2,8 @@
 title: Non Extractive Architecture // Transactions of Care
 draft: false
 tags:
-  - design
   - speculative
+  - design
 date: "2022"
 hide: true
 Location:

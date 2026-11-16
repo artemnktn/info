@@ -99,7 +99,12 @@ export default ((opts?: Partial<TagContentOptions>) => {
                         </>
                       )}
                     </p>
-                    <PageList limit={options.numPages} showTags={false} {...listProps} sort={options?.sort} />
+                    <PageList
+                      limit={options.numPages}
+                      showTags={false}
+                      {...listProps}
+                      sort={options?.sort}
+                    />
                   </div>
                 </div>
               )

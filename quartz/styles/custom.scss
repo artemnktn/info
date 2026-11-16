@@ -81,13 +81,13 @@ article h3,
 
 /* Selection: blue background with green text */
 ::selection {
-  background: #43A9DA !important;
-  color: #00FF3B !important;
+  background: #43a9da !important;
+  color: #00ff3b !important;
 }
 
 :root[saved-theme="dark"] ::selection {
-  background: #43A9DA !important;
-  color: #00FF3B !important;
+  background: #43a9da !important;
+  color: #00ff3b !important;
 }
 
 /* Base size + control height */
@@ -171,7 +171,7 @@ article h3,
 :root[saved-theme="dark"] .contact-sidebar *,
 :root[saved-theme="dark"] .hongkong-time-wrapper,
 :root[saved-theme="dark"] .hongkong-time-wrapper .hongkong-time {
-  color: #5A5A5A !important;
+  color: #5a5a5a !important;
 }
 
 /* Links */
@@ -203,7 +203,9 @@ a.internal.tag-link,
   padding: 4px 6px;
   font-weight: 400;
   text-decoration: none !important;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 a.internal.tag-link:hover,
@@ -553,6 +555,43 @@ body[data-slug="index"] #quartz-body > .center > article.popover-hint > p {
   }
 }
 
+/* Solid resize grips, centered on the window corners. */
+.graph-content-preview .graph-content-inner,
+.graph > .global-graph-outer > .global-graph-wrapper {
+  overflow: visible;
+}
+
+.graph-content-preview .graph-content-inner .graph-window-resize-handle,
+.graph > .global-graph-outer > .global-graph-wrapper .graph-window-resize-handle {
+  &::after {
+    width: 10px;
+    height: 10px;
+    border: none;
+    background: var(--dark);
+    opacity: 1;
+  }
+
+  &.graph-window-resize-se::after {
+    right: -5px;
+    bottom: -5px;
+  }
+
+  &.graph-window-resize-sw::after {
+    left: -5px;
+    bottom: -5px;
+  }
+
+  &.graph-window-resize-ne::after {
+    right: -5px;
+    top: -5px;
+  }
+
+  &.graph-window-resize-nw::after {
+    left: -5px;
+    top: -5px;
+  }
+}
+
 /* Light: black modal controls */
 :root:not([saved-theme="dark"]) .graph-content-preview {
   .graph-content-open-link:hover {
@@ -624,15 +663,31 @@ body[data-slug="index"] #quartz-body > .center > article.popover-hint > p {
 }
 
 /* Light: black filter hover + active */
-:root:not([saved-theme="dark"]) .graph .global-graph-wrapper .graph-filters .graph-filter-pill:hover,
-:root:not([saved-theme="dark"]) .graph .global-graph-wrapper .graph-view-toggle .graph-filter-pill:hover,
+:root:not([saved-theme="dark"])
+  .graph
+  .global-graph-wrapper
+  .graph-filters
+  .graph-filter-pill:hover,
+:root:not([saved-theme="dark"])
+  .graph
+  .global-graph-wrapper
+  .graph-view-toggle
+  .graph-filter-pill:hover,
 :root:not([saved-theme="dark"]) .graph .global-graph-wrapper .graph-index-item:hover {
   color: #000000 !important;
   border-color: #000000 !important;
 }
 
-:root:not([saved-theme="dark"]) .graph .global-graph-wrapper .graph-filters .graph-filter-pill.active,
-:root:not([saved-theme="dark"]) .graph .global-graph-wrapper .graph-view-toggle .graph-filter-pill.active {
+:root:not([saved-theme="dark"])
+  .graph
+  .global-graph-wrapper
+  .graph-filters
+  .graph-filter-pill.active,
+:root:not([saved-theme="dark"])
+  .graph
+  .global-graph-wrapper
+  .graph-view-toggle
+  .graph-filter-pill.active {
   color: #000000 !important;
   border-color: #000000 !important;
 }
@@ -652,7 +707,7 @@ body[data-slug="index"] #quartz-body > .center > article.popover-hint > p {
 
 /* No rounded corners */
 :root {
-  --textHighlight: #43A9DA !important;
+  --textHighlight: #43a9da !important;
   --color-purple: #ffffff !important;
   --color-purple-rgb: 255, 255, 255 !important;
   --sync-avatar-color-7: #ffffff !important;
@@ -686,7 +741,7 @@ body[data-slug="index"] #quartz-body > .center > article.popover-hint > p {
 }
 
 .text-highlight {
-  color: #00FF3B !important;
+  color: #00ff3b !important;
 }
 
 .graph > .graph-outer,

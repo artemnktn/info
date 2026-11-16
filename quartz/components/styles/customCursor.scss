@@ -7,5 +7,7 @@ $cursor-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' w
 
 body.custom-cursor-active,
 body.custom-cursor-active * {
-  cursor: $cursor-svg 0 0, auto !important;
+  cursor:
+    $cursor-svg 0 0,
+    auto !important;
 }

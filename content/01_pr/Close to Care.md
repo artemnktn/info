@@ -2,9 +2,9 @@
 title: Close to Care
 draft: false
 tags:
-  - urban
+  - mapping
+  - policy
   - gis
-  - design
 date: "2025"
 hide: true
 Location:

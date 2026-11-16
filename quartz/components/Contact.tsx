@@ -9,11 +9,7 @@ const formattedDate = buildDate.toLocaleDateString("en-GB", {
 })
 
 const Contact: QuartzComponent = ({ displayClass }: QuartzComponentProps) => {
-  return (
-    <div class={classNames(displayClass, "contact-sidebar")}>
-      revised: {formattedDate}
-    </div>
-  )
+  return <div class={classNames(displayClass, "contact-sidebar")}>revised: {formattedDate}</div>
 }
 
 Contact.css = `

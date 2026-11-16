@@ -4,8 +4,10 @@ import { fetchCanonical } from "./util"
 const htmlParser = new DOMParser()
 
 export async function showContentModal(targetUrl: URL) {
-  const existingCount = document.querySelectorAll(".graph-content-preview").length
-  const cascadeOffset = existingCount * 24
+  const existingCount = document.querySelectorAll(".graph-content-preview.active").length
+  const cascadeOffset = (existingCount % 6) * 24
+  let closed = false
+  const gestureCleanups = new Set<() => void>()
 
   const overlay = document.createElement("div")
   overlay.className = "graph-content-preview"
@@ -37,11 +39,7 @@ export async function showContentModal(targetUrl: URL) {
   bottomHandle.onmousedown = (e: MouseEvent) => {
     if ((e.target as HTMLElement).closest("button, a")) return
     e.preventDefault()
-    const pid = (e as unknown as PointerEvent).pointerId
     startDrag(e.clientX, e.clientY)
-    if (pid !== undefined && bottomHandle.setPointerCapture) {
-      bottomHandle.setPointerCapture(pid)
-    }
   }
   bottomHandle.ontouchstart = (e: TouchEvent) => {
     if ((e.target as HTMLElement).closest("button, a")) return
@@ -49,9 +47,6 @@ export async function showContentModal(targetUrl: URL) {
       e.preventDefault()
       const t = e.touches[0]
       startDrag(t.clientX, t.clientY)
-      if (bottomHandle.setPointerCapture) {
-        bottomHandle.setPointerCapture(t.identifier)
-      }
     }
   }
 
@@ -88,7 +83,9 @@ export async function showContentModal(targetUrl: URL) {
       document.removeEventListener("pointercancel", onPointerUp)
       document.removeEventListener("touchmove", onTouchMove, { capture: true })
       document.removeEventListener("touchend", onTouchEnd)
+      document.removeEventListener("touchcancel", onTouchEnd)
       document.body.style.userSelect = ""
+      gestureCleanups.delete(onEnd)
     }
     function onMouseMove(e: MouseEvent) {
       onMove(e.clientX, e.clientY)
@@ -103,6 +100,7 @@ export async function showContentModal(targetUrl: URL) {
     function onTouchEnd() {
       onEnd()
     }
+    gestureCleanups.add(onEnd)
     document.body.style.userSelect = "none"
     document.addEventListener("mousemove", onMouseMove)
     document.addEventListener("mouseup", onEnd)
@@ -110,16 +108,13 @@ export async function showContentModal(targetUrl: URL) {
     document.addEventListener("pointercancel", onPointerUp)
     document.addEventListener("touchmove", onTouchMove, { passive: false, capture: true })
     document.addEventListener("touchend", onTouchEnd)
+    document.addEventListener("touchcancel", onTouchEnd)
   }
 
   dragHandle.onmousedown = (e: MouseEvent) => {
     if ((e.target as HTMLElement).closest("button, a")) return
     e.preventDefault()
-    const pid = (e as unknown as PointerEvent).pointerId
     startDrag(e.clientX, e.clientY)
-    if (pid !== undefined && dragHandle.setPointerCapture) {
-      dragHandle.setPointerCapture(pid)
-    }
   }
   dragHandle.ontouchstart = (e: TouchEvent) => {
     if ((e.target as HTMLElement).closest("button, a")) return
@@ -127,16 +122,20 @@ export async function showContentModal(targetUrl: URL) {
       e.preventDefault()
       const t = e.touches[0]
       startDrag(t.clientX, t.clientY)
-      if (dragHandle.setPointerCapture) {
-        dragHandle.setPointerCapture(t.identifier)
-      }
     }
   }
 
   function close() {
-    document.dispatchEvent(new CustomEvent("graph-highlight", { detail: { slug: null } }) as CustomEventMap["graph-highlight"])
-    overlay.classList.remove("active")
-    overlay.addEventListener("transitionend", () => overlay.remove(), { once: true })
+    if (closed) return
+    closed = true
+    gestureCleanups.forEach((cleanup) => cleanup())
+    document.removeEventListener("prenav", close)
+    document.dispatchEvent(
+      new CustomEvent("graph-highlight", {
+        detail: { slug: null },
+      }) as CustomEventMap["graph-highlight"],
+    )
+    overlay.remove()
     document.removeEventListener("keydown", onEsc)
   }
 
@@ -149,12 +148,14 @@ export async function showContentModal(targetUrl: URL) {
     }
   }
   document.addEventListener("keydown", onEsc)
+  document.addEventListener("prenav", close)
 
   const contentWrap = document.createElement("div")
   contentWrap.className = "graph-content-body"
 
   try {
     const res = await fetchCanonical(targetUrl)
+    if (!res.ok) throw new Error(`Preview request failed: ${res.status}`)
     const contentType = res.headers.get("Content-Type") ?? ""
     if (!contentType.startsWith("text/html")) {
       contentWrap.innerHTML = `<p>Cannot preview this content.</p>`
@@ -171,6 +172,8 @@ export async function showContentModal(targetUrl: URL) {
   } catch {
     contentWrap.innerHTML = `<p>Failed to load content.</p>`
   }
+
+  if (closed) return
 
   const MIN_W = 280
   const MIN_H = 200
@@ -218,6 +221,8 @@ export async function showContentModal(targetUrl: URL) {
         el.style.maxWidth = "none"
         el.style.height = `${h}px`
         el.style.maxHeight = "none"
+        dX = ((corner.includes("e") ? 1 : -1) * (w - startW)) / 2
+        dY = ((corner.includes("s") ? 1 : -1) * (h - startH)) / 2
         if (setPos) setPos(startPosX + dX, startPosY + dY)
       }
       const endResize = () => {
@@ -227,7 +232,9 @@ export async function showContentModal(targetUrl: URL) {
         document.removeEventListener("pointercancel", onPointerUp)
         document.removeEventListener("touchmove", onTouchMove, { capture: true })
         document.removeEventListener("touchend", onTouchEnd)
+        document.removeEventListener("touchcancel", onTouchEnd)
         document.body.style.userSelect = ""
+        gestureCleanups.delete(endResize)
       }
       const onMouseMove = (ev: MouseEvent) => update(ev.clientX, ev.clientY)
       const onPointerUp = () => endResize()
@@ -238,6 +245,7 @@ export async function showContentModal(targetUrl: URL) {
         }
       }
       const onTouchEnd = () => endResize()
+      gestureCleanups.add(endResize)
       document.body.style.userSelect = "none"
       document.addEventListener("mousemove", onMouseMove)
       document.addEventListener("mouseup", endResize)
@@ -245,24 +253,18 @@ export async function showContentModal(targetUrl: URL) {
       document.addEventListener("pointercancel", onPointerUp)
       document.addEventListener("touchmove", onTouchMove, { passive: false, capture: true })
       document.addEventListener("touchend", onTouchEnd)
+      document.addEventListener("touchcancel", onTouchEnd)
     }
 
     handle.onmousedown = (e: MouseEvent) => {
       e.preventDefault()
-      const pid = (e as unknown as PointerEvent).pointerId
       startResize(e.clientX, e.clientY)
-      if (pid !== undefined && handle.setPointerCapture) {
-        handle.setPointerCapture(pid)
-      }
     }
     handle.ontouchstart = (e: TouchEvent) => {
       if (e.touches.length > 0) {
         e.preventDefault()
         const t = e.touches[0]
         startResize(t.clientX, t.clientY)
-        if (handle.setPointerCapture) {
-          handle.setPointerCapture(t.identifier)
-        }
       }
     }
     return handle
@@ -285,7 +287,11 @@ export async function showContentModal(targetUrl: URL) {
 
   const pathSlug = targetUrl.pathname.replace(/^\//, "").replace(/\/$/, "")
   if (pathSlug.startsWith("tags/")) {
-    document.dispatchEvent(new CustomEvent("graph-highlight", { detail: { slug: pathSlug } }) as CustomEventMap["graph-highlight"])
+    document.dispatchEvent(
+      new CustomEvent("graph-highlight", {
+        detail: { slug: pathSlug },
+      }) as CustomEventMap["graph-highlight"],
+    )
   }
 
   if (cascadeOffset) {

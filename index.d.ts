@@ -9,6 +9,7 @@ interface CustomEventMap {
   nav: CustomEvent<{ url: FullSlug }>
   themechange: CustomEvent<{ theme: "light" | "dark" }>
   readermodechange: CustomEvent<{ mode: "on" | "off" }>
+  "graph-refresh": CustomEvent<{ local: boolean }>
   "graph-highlight": CustomEvent<{ slug: string | null }>
 }
 

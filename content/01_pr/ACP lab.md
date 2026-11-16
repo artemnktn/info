@@ -2,10 +2,9 @@
 title: Algorithmic City Planning lab
 draft: false
 tags:
-  - urban
-  - design
-  - policy
   - mapping
+  - policy
+  - gis
 date: "2025"
 hide: true
 Location: Tel Aviv

@@ -86,10 +86,13 @@ function applyGlobalViewMode(wrapper: HTMLElement | null, mode: GraphViewMode) {
   }
 }
 
-function formatIndexDate(raw: Date | string | undefined): string | null {
+function formatIndexDate(raw: Date | string | undefined, includeMonth = false): string | null {
   if (!raw) return null
   const d = raw instanceof Date ? raw : new Date(raw)
   if (Number.isNaN(d.getTime())) return null
+  if (includeMonth) {
+    return d.toLocaleDateString("en-US", { month: "short", year: "numeric", timeZone: "UTC" })
+  }
   return d.getFullYear().toString()
 }
 
@@ -130,8 +133,10 @@ function populateIndexList(
     const li = document.createElement("li")
     li.className = "graph-index-li"
     const isHidden = details.hide === true
-    const dateLabel =
-      details.dateRange ?? formatIndexDate(details.date as Date | string | undefined)
+    const isNews = (details.cssclasses ?? []).includes("news")
+    const dateLabel = isNews
+      ? (formatIndexDate(details.date as Date | string | undefined, true) ?? details.dateRange)
+      : (details.dateRange ?? formatIndexDate(details.date as Date | string | undefined))
 
     const row = document.createElement(isHidden ? "span" : "button")
     if (!isHidden) {
@@ -190,22 +195,29 @@ function setupGlobalGraphChrome(
   allBtn.addEventListener("click", () => {
     cssclassFilter = null
     localStorage.setItem(cssclassFilterKey, "")
-    document.dispatchEvent(new CustomEvent("nav", { detail: { url: getFullSlug(window) } }))
-    document.dispatchEvent(new CustomEvent("graph-refresh"))
+    document.dispatchEvent(new CustomEvent("graph-refresh", { detail: { local: true } }))
   })
   filtersEl.appendChild(allBtn)
 
   if (allCssclasses.size > 0) {
-    for (const c of [...allCssclasses].sort()) {
+    const filterOrder = ["news", "project", "writing", "conference"]
+    const filterLabels: Record<string, string> = { project: "projects", writing: "writings" }
+    const orderedClasses = [...allCssclasses].sort((a, b) => {
+      const rank = (value: string) => {
+        const index = filterOrder.indexOf(value)
+        return index === -1 ? filterOrder.length : index
+      }
+      return rank(a) - rank(b) || a.localeCompare(b)
+    })
+    for (const c of orderedClasses) {
       const btn = document.createElement("button")
       btn.type = "button"
       btn.className = "graph-filter-pill" + (cssclassFilter === c ? " active" : "")
-      btn.textContent = c
+      btn.textContent = filterLabels[c] ?? c
       btn.addEventListener("click", () => {
         cssclassFilter = cssclassFilter === c ? null : c
         localStorage.setItem(cssclassFilterKey, cssclassFilter ?? "")
-        document.dispatchEvent(new CustomEvent("nav", { detail: { url: getFullSlug(window) } }))
-        document.dispatchEvent(new CustomEvent("graph-refresh"))
+        document.dispatchEvent(new CustomEvent("graph-refresh", { detail: { local: true } }))
       })
       filtersEl.appendChild(btn)
     }
@@ -221,7 +233,7 @@ function setupGlobalGraphChrome(
       btn.addEventListener("click", () => {
         if (viewMode === mode) return
         viewMode = mode
-        document.dispatchEvent(new CustomEvent("graph-refresh"))
+        document.dispatchEvent(new CustomEvent("graph-refresh", { detail: { local: false } }))
       })
       toggleEl.appendChild(btn)
     }
@@ -238,7 +250,7 @@ type TweenNode = {
   stop: () => void
 }
 
-async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
+async function renderGraph(graph: HTMLElement, fullSlug: FullSlug, isCurrent: () => boolean) {
   const slug = simplifySlug(fullSlug)
   const visited = getVisited()
   removeAllChildren(graph)
@@ -248,7 +260,14 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const isIndex = slug === "/" || slug === "index" || slug === ""
   const isLocalContainer = graph.classList.contains("graph-container")
   if (isIndex && isLocalContainer) {
-    cfg = { ...cfg, depth: -1, scale: 0.9, centerForce: 0.2, focusOnHover: true, enableRadial: true }
+    cfg = {
+      ...cfg,
+      depth: -1,
+      scale: 0.9,
+      centerForce: 0.2,
+      focusOnHover: true,
+      enableRadial: true,
+    }
   }
   let {
     drag: enableDrag,
@@ -272,12 +291,10 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       v,
     ]),
   )
+  if (!isCurrent()) return () => {}
   const links: SimpleLinkData[] = []
   const tags: SimpleSlug[] = []
   const validLinks = new Set(data.keys())
-
-  const pageMatchesCssclassFilter = (slug: SimpleSlug) =>
-    !cssclassFilter || (data.get(slug)?.cssclasses ?? []).includes(cssclassFilter)
 
   // Populate cssclass filters + index list (global graph modal only)
   const isGlobalContainer = graph.classList.contains("global-graph-container")
@@ -313,10 +330,9 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   }
 
   const neighbourhood = new Set<SimpleSlug>()
-  const seeds: SimpleSlug[] = cssclassFilter
-    ? [...validLinks].filter(
-        (id) => (data.get(id)?.cssclasses ?? []).includes(cssclassFilter),
-      )
+  const selectedClass = cssclassFilter
+  const seeds: SimpleSlug[] = selectedClass
+    ? [...validLinks].filter((id) => (data.get(id)?.cssclasses ?? []).includes(selectedClass))
     : [slug]
 
   const wl: (SimpleSlug | "__SENTINEL")[] = [...seeds, "__SENTINEL"]
@@ -370,11 +386,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   })
 
   const graphLinks = links
-    .filter(
-      (l) =>
-        neighbourhood.has(l.source) &&
-        neighbourhood.has(l.target),
-    )
+    .filter((l) => neighbourhood.has(l.source) && neighbourhood.has(l.target))
     .map((l) => ({
       source: nodes.find((n) => n.id === l.source)!,
       target: nodes.find((n) => n.id === l.target)!,
@@ -560,8 +572,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
     const tweenGroup = new TweenGroup()
     for (const n of nodeRenderData) {
-      const alpha =
-        effectiveId !== null && focusOnHover ? (n.active ? 1 : 0.2) : 1
+      const alpha = effectiveId !== null && focusOnHover ? (n.active ? 1 : 0.2) : 1
       tweenGroup.add(new Tweened<Graphics>(n.gfx, tweenGroup).to({ alpha }, 200))
     }
 
@@ -595,6 +606,11 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     resolution: window.devicePixelRatio,
     eventMode: "static",
   })
+  if (!isCurrent()) {
+    simulation.stop()
+    app.destroy({ removeView: true, releaseGlobalResources: false }, { children: true })
+    return () => {}
+  }
   graph.appendChild(app.canvas)
 
   const stage = app.stage
@@ -790,14 +806,16 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   }
 
   requestAnimationFrame(animate)
-
-  ;(graph as HTMLElement & { __setGraphHighlight?: (id: string | null) => void }).__setGraphHighlight =
-    setGraphHighlight
+  ;(
+    graph as HTMLElement & { __setGraphHighlight?: (id: string | null) => void }
+  ).__setGraphHighlight = setGraphHighlight
 
   return () => {
-    delete (graph as HTMLElement & { __setGraphHighlight?: (id: string | null) => void }).__setGraphHighlight
+    delete (graph as HTMLElement & { __setGraphHighlight?: (id: string | null) => void })
+      .__setGraphHighlight
     stopAnimation = true
-    app.destroy()
+    simulation.stop()
+    app.destroy({ removeView: true, releaseGlobalResources: false }, { children: true })
   }
 }
 
@@ -805,49 +823,62 @@ let localGraphCleanups: (() => void)[] = []
 let globalGraphCleanups: (() => void)[] = []
 
 function cleanupLocalGraphs() {
-  for (const cleanup of localGraphCleanups) {
-    cleanup()
-  }
+  const cleanups = localGraphCleanups
   localGraphCleanups = []
+  for (const cleanup of cleanups) cleanup()
 }
 
 function cleanupGlobalGraphs() {
-  for (const cleanup of globalGraphCleanups) {
-    cleanup()
-  }
+  const cleanups = globalGraphCleanups
   globalGraphCleanups = []
+  for (const cleanup of cleanups) cleanup()
 }
 
 document.addEventListener("graph-highlight", (e: CustomEventMap["graph-highlight"]) => {
-    const slug = e.detail?.slug ?? null
-    const containers = document.querySelectorAll(
-      ".graph-container, .global-graph-container",
-    ) as NodeListOf<HTMLElement>
-    for (const el of containers) {
-      const fn = (el as HTMLElement & { __setGraphHighlight?: (id: string | null) => void })
-        .__setGraphHighlight
-      fn?.(slug)
-    }
-  },
-)
-
-let renderGlobalGraphRef: (() => Promise<void>) | null = null
+  const slug = e.detail?.slug ?? null
+  const containers = document.querySelectorAll(
+    ".graph-container, .global-graph-container",
+  ) as NodeListOf<HTMLElement>
+  for (const el of containers) {
+    const fn = (el as HTMLElement & { __setGraphHighlight?: (id: string | null) => void })
+      .__setGraphHighlight
+    fn?.(slug)
+  }
+})
 
 document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
   const slug = e.detail.url
   addToVisited(simplifySlug(slug))
+  let active = true
+  let localVersion = 0
+  let globalVersion = 0
+  window.addCleanup(() => {
+    active = false
+    localVersion++
+    globalVersion++
+    cleanupLocalGraphs()
+    cleanupGlobalGraphs()
+  })
 
   async function renderLocalGraph() {
+    const version = ++localVersion
+    const isCurrent = () => active && version === localVersion
     cleanupLocalGraphs()
     const localGraphContainers = document.getElementsByClassName("graph-container")
     for (const container of localGraphContainers) {
-      localGraphCleanups.push(await renderGraph(container as HTMLElement, slug))
+      const cleanup = await renderGraph(container as HTMLElement, slug, isCurrent)
+      if (!isCurrent()) {
+        cleanup()
+        return
+      }
+      localGraphCleanups.push(cleanup)
     }
   }
 
   await renderLocalGraph()
+  if (!active) return
   const handleThemeChange = () => {
-    void renderLocalGraph()
+    void refreshGraphs(true)
   }
 
   document.addEventListener("themechange", handleThemeChange)
@@ -857,6 +888,9 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
 
   const containers = [...document.getElementsByClassName("global-graph-outer")] as HTMLElement[]
   async function renderGlobalGraphImpl() {
+    const version = ++globalVersion
+    const isCurrent = () => active && version === globalVersion
+    cleanupGlobalGraphs()
     const slug = getFullSlug(window)
     for (const container of containers) {
       container.classList.add("active")
@@ -870,7 +904,9 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
       const dragHandle = container.querySelector(".global-graph-drag-handle") as HTMLElement
       const closeBtn = container.querySelector(".global-graph-close") as HTMLButtonElement
 
-      registerEscapeHandler(container, hideGlobalGraph)
+      registerEscapeHandler(container, hideGlobalGraph, (cleanup) =>
+        globalGraphCleanups.push(cleanup),
+      )
       closeBtn?.addEventListener("click", hideGlobalGraph)
 
       if (wrapper) {
@@ -916,6 +952,8 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
               }
               wrapper.style.width = `${w}px`
               wrapper.style.height = `${h}px`
+              dX = ((corner.includes("e") ? 1 : -1) * (w - sw)) / 2
+              dY = ((corner.includes("s") ? 1 : -1) * (h - sh)) / 2
               setWrapperPos(startPosX + dX, startPosY + dY)
             }
             const endResize = () => {
@@ -925,6 +963,7 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
               document.removeEventListener("pointercancel", onPointerUp)
               document.removeEventListener("touchmove", onTouchMove, { capture: true })
               document.removeEventListener("touchend", onTouchEnd)
+              document.removeEventListener("touchcancel", onTouchEnd)
               document.body.style.userSelect = ""
             }
             const onMouseMove = (ev: MouseEvent) => update(ev.clientX, ev.clientY)
@@ -936,6 +975,7 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
               }
             }
             const onTouchEnd = () => endResize()
+            globalGraphCleanups.push(endResize)
             document.body.style.userSelect = "none"
             document.addEventListener("mousemove", onMouseMove)
             document.addEventListener("mouseup", endResize)
@@ -943,23 +983,17 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
             document.addEventListener("pointercancel", onPointerUp)
             document.addEventListener("touchmove", onTouchMove, { passive: false, capture: true })
             document.addEventListener("touchend", onTouchEnd)
+            document.addEventListener("touchcancel", onTouchEnd)
           }
           handle.onmousedown = (e: MouseEvent) => {
             e.preventDefault()
-            const pid = (e as unknown as PointerEvent).pointerId
             startResize(e.clientX, e.clientY)
-            if (pid !== undefined && handle.setPointerCapture) {
-              handle.setPointerCapture(pid)
-            }
           }
           handle.ontouchstart = (e: TouchEvent) => {
             if (e.touches.length > 0) {
               e.preventDefault()
               const t = e.touches[0]
               startResize(t.clientX, t.clientY)
-              if (handle.setPointerCapture) {
-                handle.setPointerCapture(t.identifier)
-              }
             }
           }
           globalGraphCleanups.push(() => {
@@ -1009,6 +1043,7 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
             document.removeEventListener("pointercancel", onPointerUp)
             document.removeEventListener("touchmove", onTouchMove, { capture: true })
             document.removeEventListener("touchend", onTouchEnd)
+            document.removeEventListener("touchcancel", onTouchEnd)
             document.body.style.userSelect = ""
           }
           const onMouseMove = (e: MouseEvent) => onMove(e.clientX, e.clientY)
@@ -1020,6 +1055,7 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
             }
           }
           const onTouchEnd = () => onEnd()
+          globalGraphCleanups.push(onEnd)
           document.body.style.userSelect = "none"
           document.addEventListener("mousemove", onMouseMove)
           document.addEventListener("mouseup", onEnd)
@@ -1027,16 +1063,13 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
           document.addEventListener("pointercancel", onPointerUp)
           document.addEventListener("touchmove", onTouchMove, { passive: false, capture: true })
           document.addEventListener("touchend", onTouchEnd)
+          document.addEventListener("touchcancel", onTouchEnd)
         }
 
         dragHandle.onmousedown = (e: MouseEvent) => {
           if ((e.target as HTMLElement).closest("button")) return
           e.preventDefault()
-          const pid = (e as unknown as PointerEvent).pointerId
           startGlobalDrag(e.clientX, e.clientY)
-          if (pid !== undefined && dragHandle.setPointerCapture) {
-            dragHandle.setPointerCapture(pid)
-          }
         }
         dragHandle.ontouchstart = (e: TouchEvent) => {
           if ((e.target as HTMLElement).closest("button")) return
@@ -1044,9 +1077,6 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
             e.preventDefault()
             const t = e.touches[0]
             startGlobalDrag(t.clientX, t.clientY)
-            if (dragHandle.setPointerCapture) {
-              dragHandle.setPointerCapture(t.identifier)
-            }
           }
         }
 
@@ -1058,13 +1088,18 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
       }
 
       if (graphContainer) {
-        globalGraphCleanups.push(await renderGraph(graphContainer, slug))
+        const cleanup = await renderGraph(graphContainer, slug, isCurrent)
+        if (!isCurrent()) {
+          cleanup()
+          return
+        }
+        globalGraphCleanups.push(cleanup)
       }
     }
   }
-  renderGlobalGraphRef = renderGlobalGraphImpl
 
   function hideGlobalGraph() {
+    globalVersion++
     viewMode = "graph"
     cleanupGlobalGraphs()
     for (const container of containers) {
@@ -1092,11 +1127,16 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
     window.addCleanup(() => icon.removeEventListener("click", renderGlobalGraphImpl))
   })
 
-  const onGraphRefresh = async () => {
-    if (document.querySelector(".global-graph-outer.active") && renderGlobalGraphRef) {
-      cleanupGlobalGraphs()
-      await renderGlobalGraphRef()
+  async function refreshGraphs(local: boolean) {
+    const tasks: Promise<void>[] = []
+    if (local) tasks.push(renderLocalGraph())
+    if (containers.some((container) => container.classList.contains("active"))) {
+      tasks.push(renderGlobalGraphImpl())
     }
+    await Promise.all(tasks)
+  }
+  const onGraphRefresh = (event: CustomEventMap["graph-refresh"]) => {
+    void refreshGraphs(event.detail.local)
   }
   document.addEventListener("graph-refresh", onGraphRefresh)
   window.addCleanup(() => document.removeEventListener("graph-refresh", onGraphRefresh))

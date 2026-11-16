@@ -2,10 +2,10 @@
 title: Form-Based Codes
 draft: false
 tags:
-  - urban
-  - gis
   - design
   - policy
+  - urban
+  - morphology
 date: 2017-2024
 hide: true
 Location: Derbent, Moscow, Ulan-Ude

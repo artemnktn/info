@@ -2,9 +2,8 @@
 title: podcast // впесочнице
 draft: false
 tags:
-  - urban
   - design
-  - critical
+  - speculative
 date: 2021-2023
 hide: true
 Location:

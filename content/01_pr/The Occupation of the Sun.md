@@ -2,9 +2,9 @@
 title: The Occupation of the Sun
 draft: false
 tags:
-  - urban
   - critical
   - mapping
+  - gis
 date: "2025"
 hide: true
 Location:

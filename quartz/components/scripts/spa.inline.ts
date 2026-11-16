@@ -167,7 +167,9 @@ function createRouter() {
       if (tagMatch) {
         const slug = "tags/" + tagMatch[1]
         document.dispatchEvent(
-          new CustomEvent("graph-highlight", { detail: { slug } }) as CustomEventMap["graph-highlight"],
+          new CustomEvent("graph-highlight", {
+            detail: { slug },
+          }) as CustomEventMap["graph-highlight"],
         )
         return
       }
@@ -177,7 +179,9 @@ function createRouter() {
       if (anchor && ("hide" in anchor.dataset || "project" in anchor.dataset)) {
         const slug = pathSlug as FullSlug
         document.dispatchEvent(
-          new CustomEvent("graph-highlight", { detail: { slug } }) as CustomEventMap["graph-highlight"],
+          new CustomEvent("graph-highlight", {
+            detail: { slug },
+          }) as CustomEventMap["graph-highlight"],
         )
         return
       }

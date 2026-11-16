@@ -96,7 +96,5 @@ function setupCarousel(callout: HTMLElement) {
 }
 
 document.addEventListener("nav", () => {
-  document
-    .querySelectorAll<HTMLElement>('.callout[data-callout="carousel"]')
-    .forEach(setupCarousel)
+  document.querySelectorAll<HTMLElement>('.callout[data-callout="carousel"]').forEach(setupCarousel)
 })

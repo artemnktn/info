@@ -28,7 +28,8 @@ export function pageResources(
   staticResources: StaticResources,
   buildId?: string,
 ): StaticResources {
-  const contentIndexPath = joinSegments(baseDir, "static/contentIndex.json") + (buildId ? `?v=${buildId}` : "")
+  const contentIndexPath =
+    joinSegments(baseDir, "static/contentIndex.json") + (buildId ? `?v=${buildId}` : "")
   const contentIndexScript = `const fetchData = fetch("${contentIndexPath}").then(data => data.json())`
 
   const resources: StaticResources = {

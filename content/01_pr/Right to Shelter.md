@@ -2,9 +2,9 @@
 title: Right to Shelter
 draft: false
 tags:
-  - gis
-  - design
   - mapping
+  - policy
+  - gis
 date: "2025"
 hide: true
 Location: Negev/Naqab

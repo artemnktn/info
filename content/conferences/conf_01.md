@@ -1,14 +1,15 @@
 ---
-title: ISoUF
+title: The 33rd International Seminar on Urban Form (ISUF)
 date: 2026-09-01
 tags:
-  - news
-draft: true
+  - morphology
+  - urban
+draft: false
 hide: true
 Location:
 link:
 cssclasses:
-  - news
+  - conferences
 ---
 
 # {{date:YYYY-MM-DD}}
